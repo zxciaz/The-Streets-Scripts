@@ -1,0 +1,128 @@
+local ScreenGui = Instance.new("ScreenGui")
+local namebox = Instance.new("TextBox")
+
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+namebox.Name = "namebox"
+namebox.Parent = ScreenGui
+namebox.BackgroundColor3 = Color3.new(0, 0, 0)
+namebox.BorderColor3 = Color3.new(1, 1, 1)
+namebox.Position = UDim2.new(0, 0, 0.469287395, 0)
+namebox.Size = UDim2.new(0, 200, 0, 50)
+namebox.Font = Enum.Font.SourceSans
+namebox.Text = ""
+namebox.TextColor3 = Color3.new(0.937255, 0.937255, 0.937255)
+namebox.TextSize = 14
+
+local Commands = {}
+local Prefix = "'"
+local Uis = game:GetService("UserInputService")
+local Ctrl = false
+Uis.InputBegan:Connect(function(Key, Typing)
+    if not Typing then
+        if Key.KeyCode.Name == "Semicolon" then
+            namebox.Visible = true
+            namebox.Text = ""
+            wait()
+            namebox:CaptureFocus()
+            namebox:TweenSize(UDim2.new(0, 419, 0, 20), "Out", "Quad", 0.1, true)
+        end
+    end
+end)
+namebox.FocusLost:Connect(function(Foc)
+    if Foc == true then
+        namebox:TweenSize(UDim2.new(0, 0, 0, 20), "Out", "Quad", 0.1, true)
+        wait()
+        namebox.Visible = false
+        game.GetService(game, "Players"):Chat(Prefix..namebox.Text)
+    end
+end)
+Uis.InputEnded:Connect(function(input)
+    if input.KeyCode.Name == "LeftAlt" then
+        Ctrl = false
+        namebox.Visible = false
+    end
+end) 
+
+local function Notify(title, text, icon, time)
+    game.StarterGui:SetCore("SendNotification",{
+        Title = title;
+        Text = text;
+        Icon = icon;
+        Duration = time;
+    })
+end
+Notify("zxciaz", "Welcome to my seperate aimlock from Citizen V2 for the streets, Enjoy!", "", 3)
+
+local function AddCommand(CmdName, Desc, Func)
+    Commands[#Commands + 1] = {
+        ["Name"] = CmdName;
+        ["Description"] = ","..Desc.."";
+        ["Function"] = Func;
+    };
+end
+
+local function Search(CmdName)
+    for _, v in pairs(Commands) do 
+        if v.Name == CmdName then 
+            return v.Function 
+        end
+    end
+end
+
+local function CheckCmd(Cmd)
+    Cmd = string.lower(Cmd)
+    if Cmd:sub(1, #Prefix) == Prefix then 
+        local args = string.split(Cmd:sub(#Prefix + 1), " ")
+        local CmdName = Search(table.remove(args, 1))
+        if CmdName and args then
+            return CmdName(args)
+        end
+    end
+end
+
+local function psearch(Name)
+    local Plr;
+    for _, v in pairs(game:GetService("Players"):GetPlayers()) do 
+        if string.lower(string.sub(v.Name, 1, string.len(Name))) == string.lower(Name) then 
+            Plr = v 
+        elseif Name == "me" then 
+            Plr = game.Players.LocalPlayer
+        elseif Name == "all" then 
+            Plr = game.Players
+        end
+    end
+       if Plr then return Plr
+    end
+end
+
+local Players = game:GetService("Players");
+local LocalP, Mouse = Players.LocalPlayer, Players.LocalPlayer:GetMouse();
+local Aimlock, AV = false, 5
+--Aimlock Commands
+AddCommand("aimlock", "aimlock plr", function(args)
+    local AimlockTarget = psearch(args[1])
+    Notify("zxciaz", "Aimlock Target: "..(AimlockTarget.Name), "", 3)
+    Aimlock = true
+    Mouse.Button1Down:Connect(function()
+        if LocalP.Character:FindFirstChildWhichIsA("Tool") then
+            ALTool = LocalP.Character:FindFirstChildWhichIsA("Tool")
+            if Aimlock == true and AimlockTarget ~= nil and AimlockTarget.Character:FindFirstChild("Torso") then
+                LocalP.Backpack.Input:FireServer("m1",{
+                    ["mousehit"] = AimlockTarget.Character.Torso.CFrame + AimlockTarget.Character.Torso.Velocity/AV;
+                    ["velo"] = math.huge;
+                })
+            end
+        end
+    end)
+end)
+
+AddCommand("unaimlock", "unaimlock plr", function(args)
+    Aimlock = false 
+    AimlockTarget = nil
+end)
+
+LocalP.Chatted:Connect(function(Msg)
+    CheckCmd(Msg)
+end)
