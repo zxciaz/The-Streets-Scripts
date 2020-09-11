@@ -1,0 +1,25 @@
+local LocalP = game.Players.LocalPlayer
+local plrK = game:GetService("Players")
+local glock = LocalP.Backpack:FindFirstChild("Glock")
+local pfix = ""
+
+LocalP.Chatted:Connect(function(msg)
+   if msg:lower():sub(1,3) == pfix.."rg " then
+       plr = string.sub(msg, 4)
+       for i, p in pairs(game.Players:GetPlayers()) do
+           if p.Name:lower():match(plr:lower()) then
+               if plr and LocalP.Character.Glock then
+               repeat
+                   wait()
+                   until LocalP.Character["Right Arm"]:FindFirstChild("RightGrip")
+                   LocalP.Character["Right Arm"]:FindFirstChild("RightGrip"):Remove()
+               end
+               repeat
+                   wait()
+                   glock.Handle.CFrame = plrK[p.Name].Character.Head.CFrame
+                   glock.Fire:FireServer(plrK[p.Name].Character.Torso.CFrame) -- no im not putting velocity on this
+               until plrK[p.Name].Character:FindFirstChild("KO") or plrK[p.Name].Character.Humanoid.Health == 0 or LocalP.Character:FindFirstChild("KO") or LocalP.Character.Humanoid.Health == 0
+           end
+       end
+   end
+end)
