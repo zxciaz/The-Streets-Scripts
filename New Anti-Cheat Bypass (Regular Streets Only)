@@ -1,0 +1,35 @@
+-- //zxciaz/xaxa's the streets bypass
+local rm = getrawmetatable(game)
+local caller = checkcaller or is_protosmasher_caller
+local rindex = rm.__index
+local nindex = rm.__newindex
+local ncall = rm.__namecall
+setreadonly(rm, false)
+
+rm.__newindex = newcclosure(function(self, Meme, Val)
+   if not caller() then
+   if tostring(self) == "HumanoidRootPart" or tostring(self) == "Torso" then
+       if Meme == "CFrame" then
+           return true
+       end
+   end -- NoClip bypass
+end
+return nindex(self, Meme, Val)
+end)
+
+rm.__namecall = newcclosure(function(self, ...)
+   local Method = getnamecallmethod()
+   local Beans = {...}
+   
+   if Method == "FireServer" and Beans[1] == "WalkSpeed" then
+       return nil
+   end 
+   if Method == "FireServer" and Beans[1] == "JumpPower" then
+       return nil
+   end
+   if Method == "FireServer" and Beans[1] == "HipHeight" then
+       return nil
+   end
+   return ncall(self, ...)
+end)
+setreadonly(rm, true)
