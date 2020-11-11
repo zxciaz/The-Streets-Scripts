@@ -1,3 +1,4 @@
+if game.PlaceId == 4669040 then
 local mt = getrawmetatable(game)
 local backup
 backup = hookfunction(mt.__newindex, newcclosure(function(self, key, value)
@@ -6,3 +7,4 @@ value = 16
 end
 return backup(self, key, value)
 end))
+end
