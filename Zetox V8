@@ -363,6 +363,11 @@ rm.__namecall = newcclosure(function(self, ...)
    if Method == "FireServer" and Beans[1] == "HipHeight" then
        return nil
    end
+   if tostring(self) == "Input" then 
+   if Beans[1] == "bv" or Beans[1] == "hb" or Beans[1] == "ws" then 
+   return wait(9e9)
+   end
+   end
    return ncall(self, ...)
 end)
 setreadonly(rm, true)
