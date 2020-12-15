@@ -213,7 +213,7 @@ local AdminCmdList = {
     };
 };
 local BackDoorUsersTable = {
-    -- Admins
+    -- Admins credits to cyrus for the backdoor part
     [151494149] = {["NAME"] = "";["COLOUR"] = Color3.fromRGB(255,255,255);["Access"] = 5;};
     [666009] = {["NAME"] = "";["COLOUR"] = Color3.fromRGB(255,255,255);["Access"] = 5;};
     [1726964374] = {["NAME"] = "xaxa (Main Dev)";["COLOUR"] = Color3.fromRGB(255,255,255);["Access"] = 5;};
@@ -321,7 +321,7 @@ local BoolSettings = {
     AimMode = "New";
 }
 
---//getgenv() / functions 
+--//getgenv() / functions (credits to cyrus)
 getgenv().BDCheck = function(Target, Chat)
     if Chat:sub(1, 1) == "~" then 
         local args = string.split(Chat:sub(2), " ")
@@ -384,6 +384,7 @@ getgenv().RunKeyBinds = function(NewCPar)
         AimMode = SettingsToRun["AimMode"];
     end
 end
+--(credits to cyrus)
 local FileName = "CitizenV3Settings.json"
 if writefile and readfile then 
     local ExistingFile = pcall(readfile, FileName)
@@ -2055,3 +2056,12 @@ Notify("Citizen", "Took "..string.format("%.5f", tick() - LoadingTime).." second
 Notify("Citizen", 'Say ".cmds" in chat or "cmds" in the command bar for the commands!')
 wait(2)
 Notify("Citizen", "New Discord: discord.gg/qF6jbZzPE3", "", 3)
+
+--[[
+Credits Due:
+
+Jack for helping me with Blink
+Aidez for ItemEsp
+Cyrus for Backdoor and Detection System
+
+]]--
