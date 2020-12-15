@@ -1594,13 +1594,6 @@ Commands["Fly"] = {
         togglefly()
     end
 }
-Commands["Cmds"] = {
-    ["Aliases"] = {"commands", "cmds"};
-    ["Function"] = function()
-        PrintCommands()
-        Notify("Citizen", "Press F9 or check the window that opened for the Commands", "", 3)
-    end
-}
 Commands["Infjump"] = {
     ["Aliases"] = {"infinitejump", "infjump"};
     ["Function"] = function()
