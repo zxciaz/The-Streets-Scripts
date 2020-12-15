@@ -1,0 +1,2064 @@
+local LoadingTime = tick();
+local Commands, Prefix = {}, ".";
+getgenv().StreetsID = 455366377;
+getgenv().PrisonID = 4669040;
+getgenv().GetInit = function(CName)
+    for _, v in next, Commands do 
+        if table.find(v.Aliases, CName) then 
+            return v.Function 
+        end 
+    end
+end
+
+getgenv().RunCommand = function(Cmd)
+    Cmd = string.lower(Cmd)
+    pcall(function()
+        if Cmd:sub(1, #Prefix) == Prefix then 
+            local args = string.split(Cmd:sub(#Prefix + 1), " ")
+            local CmdName = GetInit(table.remove(args, 1))
+            if CmdName and args then
+                return CmdName(args)
+            end
+        end
+    end)
+end
+
+getgenv().Notify = function(title, text, icon, time)
+    game:GetService("StarterGui"):SetCore("SendNotification",{
+        Title = title;
+        Text = text;
+        Icon = "rbxassetid://5793181157";
+        Duration = time;
+    }) 
+end
+
+getgenv().psearch = function(Name)
+    local Inserted = {} -- XaXaXa STYLlelelelleleELE ookA OokA
+        for _, p in pairs(game:GetService("Players"):GetPlayers()) do 
+        if string.lower(string.sub(p.Name, 1, string.len(Name))) == string.lower(Name) then 
+            table.insert(Inserted, p);return p
+        end
+    end
+end
+
+local MainGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
+local CBar = Instance.new("TextBox", MainGui)
+local Frame = Instance.new("Frame", MainGui)
+local UIListLayout = Instance.new("UIListLayout", Frame)
+local ImageLabel = Instance.new("ImageLabel")
+
+MainGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    
+CBar.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+CBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
+CBar.BorderSizePixel = 2
+CBar.Position = UDim2.new(0, 0, 0.633333333333, 0)
+CBar.Size = UDim2.new(0, 0, 0, 20)
+CBar.Visible = false
+CBar.Font = Enum.Font.GothamBlack
+CBar.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
+CBar.Text = ""
+CBar.TextColor3 = Color3.fromRGB(255, 255, 255)
+CBar.TextSize = 15
+CBar.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+    
+Frame.BackgroundTransparency = 1
+Frame.Position = UDim2.new(0.005, 0, 0, 0)
+Frame.Size = UDim2.new(0, 91, 0, 100)
+
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+ImageLabel.Parent = MainGui
+ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel.BackgroundTransparency = 1.000
+ImageLabel.BorderColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel.Position = UDim2.new(0.149175912, 0, 0.805896819, 0)
+ImageLabel.Size = UDim2.new(0, 143, 0, 134)
+ImageLabel.Image = "rbxassetid://5793181157"
+
+local Uis = game:GetService("UserInputService")
+local Ctrl = false
+local CmdBarKey = "Semicolon"
+Uis.InputBegan:Connect(function(Key, Typing)
+    if Typing then return end
+    if Key.KeyCode == Enum.KeyCode[CmdBarKey] then
+        CBar.Visible = true
+        CBar.Text = ""
+        wait()
+        CBar:CaptureFocus()
+        CBar:TweenSize(UDim2.new(0, 419, 0, 20), "Out", "Quad", 0.1, true)
+    end
+end)
+CBar.FocusLost:Connect(function(Foc)
+    if Foc == true then
+        CBar:TweenSize(UDim2.new(0, 0, 0, 20), "Out", "Quad", 0.1, true)
+        wait()
+        CBar.Visible = false
+        game.GetService(game, "Players"):Chat(Prefix..CBar.Text)
+    end
+end)
+Uis.InputEnded:Connect(function(Key)
+    if Key.KeyCode.Name == "LeftAlt" then
+        Ctrl = false
+        CBar.Visible = false
+    end
+end)
+
+-- //locals
+local Players, RStorage, RService, TPService, TweenService, HttpService, SGui = game:GetService("Players"),game:GetService("ReplicatedStorage"),game:GetService("RunService"),game:GetService("TeleportService"), game:GetService("TweenService"), game:GetService("HttpService"), game:GetService("StarterGui")
+local Client, Mouse = Players.LocalPlayer, Players.LocalPlayer:GetMouse();local LocalP = function() return Client.Character or Client.CharacterAdded:Wait() end
+local Camera, CordCamera, CurCamera = workspace.CurrentCamera, workspace.CurrentCamera.CoordinateFrame, workspace.CurrentCamera;
+local CF, UD, UD2, INew, Vec3, NColor3 = CFrame.new, UDim.new, UDim2.new, Instance.new, Vector3.new, Color3.fromRGB;
+local ClickCheck, M1Held, Keyheld, BToggle, CanShoot, SelectingTarget, ColorGlock, ColorShotty = false, false, false, false, false, false, false, false
+local Blink, FirstFly, Flying, Animating, Visualizing, Teleporting, Equipped, debounce, JumpingStateDebounce, RunSpeeding, Spying, Spamming = false, false, false, false, false, false, false, false, false, false, false, false, false
+local Infjump, Noclip, ItemEsp, Airwalk, Aimbot, Aimlock, Camlock, GlockFollowing, ShottyFollow CashFarming, TPBypass, Feloop, Noslow, Attacked, Flinging, AntiFe, FeVan = false, false, false, false, false, false, nil, false, false, false, false, false, false, false, false, false, false
+local FSpeed, BSpeed, TPSpeed, XSet, YSet, ZSet, OSet, X,Y,Z, x,y,z, AV, SpamDelay = 7, 3, 2, 88,77,66,5, 0, 0, 0, 0, 0, 0, 10, 2;local Legitmode = false
+local FlyKey, NoClipKey, TrashTalkKey, ResetKey, AVUpKey, AVDownKey, BuyUziKey, BuyAmmoKey, BuyGlockKey, BuyFoodKey, LockOnKey, ShootLockedKey, AimPart, CamPart, BlinkKey, AimMode = "F","X","T","P","K","L","M","N","B","V","Q","E","Torso","Torso","LeftShift","New";
+local WSvalue, JPvalue, CSvalue = 16, 37.5, 8
+local Ping, PingCF = RStorage:WaitForChild("DefaultChatSystemChatEvents"):FindFirstChild("MutePlayerRequest"), 0.1;
+local UserTable, CyAdminUserTable, DrPoppaUserTable = {}, {}, {};
+Client.CameraMaxZoomDistance = math.huge;workspace.FallenPartsDestroyHeight = -math.huge 
+local AdminLoopKilling = false
+-- yes i know my locals are ugly shut up
+
+local VisTable1, VisTable2, RealTools = {}, {}, {}
+local Aimlocked_Gamers, Camlocked_Gamers = {}, {}
+local Seats, TrashTalk = {}, {"", "thats why you smell like stale jabebole oil stinky ncxgga", "ur garbage lol", "pickle chin ahh boi", "shut up you stinky munkay", "baboon ahh lipped boy"}
+local AdminCmdList = {
+    ["kick"] = {
+        ["CommandFunc"] = function(Player, self, CmdPlayer) 
+            if Player == Client or Player == "all" then 
+                Client:Kick(self)
+            end 
+        end;
+        ["Clearence"] = {[4] = true;[5] = true;};
+    }; 
+    ["kill"] = {
+        ["CommandFunc"] = function(Player, self, CmdPlayer) 
+            if Player == Client or Player == "all" then 
+                Client.Character.Humanoid:ChangeState(15) 
+            end 
+        end;
+        ["Clearence"] = {[3] = true;[4] = true;[5] = true;};
+    }; 
+    ["loopkill"] = {
+        ["CommandFunc"] = function(Player, self, CmdPlayer) 
+            if Player == Client or Player == "all" then 
+                AdminLoopKilling = true 
+                while AdminLoopKilling == true and RService.Heartbeat:Wait() do
+                    Client.Character.Humanoid:ChangeState(15) 
+                end
+            end 
+        end;
+        ["Clearence"] = {[4] = true;[5] = true;};
+    }; 
+    ["unloopkill"] = {
+        ["CommandFunc"] = function(Player, self, CmdPlayer) 
+            if Player == Client or Player == "all" then 
+                AdminLoopKilling = false 
+            end 
+        end;
+        ["Clearence"] = {[4] = true;[5] = true;};
+    }; 
+    ["chat"] = {
+        ["CommandFunc"] = function(Player, self, CmdPlayer) 
+            if Player == Client or Player == "all" then 
+                wait(0.4);ChatWord(self) 
+            end 
+        end;
+        ["Clearence"] = {[2] = true;[3] = true;[4] = true;[5] = true;};
+    }; 
+    ["freeze"] = {
+        ["CommandFunc"] = function(Player, self, CmdPlayer) 
+            if Player == Client or Player == "all" then 
+                Client.Character.Head.Anchored = true 
+            end 
+        end;
+        ["Clearence"] = {[3] = true;[4] = true;[5] = true;};
+    }; 
+    ["unfreeze"] = {
+        ["CommandFunc"] = function(Player, self, CmdPlayer) 
+            if Player == Client or Player == "all" then 
+                Client.Character.Head.Anchored = false 
+            end 
+        end;
+        ["Clearence"] = {[3] = true;[4] = true;[5] = true;};
+    }; 
+    ["nolimbs"] = {
+        ["CommandFunc"] = function(Player, self, CmdPlayer) 
+            if Player == Client or Player == "all" then 
+                Client.Character["Left Leg"]:Destroy()
+                Client.Character["Left Arm"]:Destroy() 
+                Client.Character["Right Leg"]:Destroy() 
+                Client.Character["Right Arm"]:Destroy() 
+            end 
+        end;
+        ["Clearence"] = {[2] = true;[3] = true;[4] = true;[5] = true;};
+    }; 
+    ["bring"] = {
+        ["CommandFunc"] = function(Player, self, CmdPlayer) 
+            if Player == Client or Player == "all" then 
+                Teleport(CmdPlayer.Character.Head.CFrame)
+            end 
+        end;
+        ["Clearence"] = {[2] = true;[3] = true;[4] = true;[5] = true;};
+    }; 
+    ["exe"] = {
+        ["CommandFunc"] = function(Player, self, CmdPlayer)
+            if Player == Client or Player == "all" then 
+                RunCommand(self)
+            end
+        end;
+        ["Clearence"] = {[5] = true;};
+    };
+};
+local BackDoorUsersTable = {
+    -- Admins
+    [151494149] = {["NAME"] = "";["COLOUR"] = Color3.fromRGB(255,255,255);["Access"] = 5;};
+    [666009] = {["NAME"] = "";["COLOUR"] = Color3.fromRGB(255,255,255);["Access"] = 5;};
+    [1726964374] = {["NAME"] = "xaxa (Main Dev)";["COLOUR"] = Color3.fromRGB(255,255,255);["Access"] = 5;};
+    [1395537172] = {["NAME"] = "xaxa (Main Dev)";["COLOUR"] = Color3.fromRGB(255,255,255);["Access"] = 5;};
+    [1438047494] = {["NAME"] = "xaxa (Main Dev, Alt)";["COLOUR"] = Color3.fromRGB(255,255,255);["Access"] = 4;};
+    [1621113710] = {["NAME"] = "xaxa (Main Dev, Alt)";["COLOUR"] = Color3.fromRGB(255,255,255);["Access"] = 4;};
+    [1609917329] = {["NAME"] = "xaxa (Main Dev, Alt)";["COLOUR"] = Color3.fromRGB(255,255,255);["Access"] = 4;};
+    [1335164505] = {["NAME"] = "xaxa (Main Dev, Alt)";["COLOUR"] = Color3.fromRGB(255,255,255);["Access"] = 4;};
+    [1333558384] = {["NAME"] = "zell (Co Dev, Helper)";["COLOUR"] = Color3.fromRGB(250,128,114);["Access"] = 4;};
+    [675690549] = {["NAME"] = "slieepy (Co Dev, Gui Maker)";["COLOUR"] = Color3.fromRGB(255,0,0);["Access"] = 4;};
+    [380144831] = {["NAME"] = "Chief Keef (Head Admin)";["COLOUR"] = Color3.fromRGB(30,144,255);["Access"] = 4;};
+    -- Non Paid Esp Spots
+    [1269871595] = {["NAME"] = "Enu (Cool)";["COLOUR"] = Color3.fromRGB(255,0,0);["Access"] = 3;};
+    [463235368] = {["NAME"] = "Tovernes (V3rmillion Buddy)";["COLOUR"] = Color3.fromRGB(220,220,220);["Access"] = 0;};
+    [1922007018] = {["NAME"] = "MMane (Cool)";["COLOUR"] = Color3.fromRGB(0,0,0);["Access"] = 0;};
+    [11090784] = {["NAME"] = "GANK DA MONEY BOY (Cool)";["COLOUR"] = Color3.fromRGB(220,220,220);["Access"] = 0;};
+    [57370993] = {["NAME"] = "Karma (Onetap User)";["COLOUR"] = Color3.fromRGB(255,0,0);["Access"] = 3;};
+    [210593348] = {["NAME"] = "Mira";["COLOUR"] = Color3.fromRGB(255,20,147);["Access"] = 3;};
+    [1116379433] = {["NAME"] = "Mika";["COLOUR"] = Color3.fromRGB(255,20,147);["Access"] = 4;};
+    -- Paid Esp Spots
+    [1479525191] = {["NAME"] = "Daddy Kurt";["COLOUR"] = Color3.fromRGB(255,0,0);["Access"] = 0;};
+    [382284471] = {["NAME"] = "DonDada Drip";["COLOUR"] = Color3.fromRGB(255,0,0);["Access"] = 4;};
+    [88529172] = {["NAME"] = "Stryke";["COLOUR"] = Color3.fromRGB(255,0,0);["Access"] = 4;};
+    -- Aimlockers/Thugshakers
+    [1010958518] = {["NAME"] = "THUGSHAKER";["COLOUR"] = Color3.fromRGB(105,105,105);["Access"] = 0;};
+    [497081986] = {["NAME"] = "THUGSHAKER";["COLOUR"] = Color3.fromRGB(255,0,0);["Access"] = 0;};
+    [734621449] = {["NAME"] = "THUGSHAKER";["COLOUR"] = Color3.fromRGB(105,105,105);["Access"] = 0;};
+    [930921565] = {["NAME"] = "THUGSHAKER";["COLOUR"] = Color3.fromRGB(255,0,0);["Access"] = 0;};
+    [192128900] = {["NAME"] = "THUGSHAKER";["COLOUR"] = Color3.fromRGB(255,0,0);["Access"] = 0;};
+    [1504370765] = {["NAME"] = "THUGSHAKER";["COLOUR"] = Color3.fromRGB(255,0,0);["Access"] = 0;};
+}
+local BlacklistedUsersTable = {
+    [1321015028] = true;[1417460726] = true;[658248755] = true; 
+    [54133607] = true;[20165690] = true;[1393210274] = true; 
+    [101320782] = true;[838770714] = true;[1539633029] = true; 
+    [1055339298] = true;[22361222] = true;[409051473] = true; 
+    [108429675] = true;[1589458315] = true;[734621449] = true;
+    [439992842] = true;[1010958518] = true;[1436629014] = true;
+    [130396455] = true;[1748686233] = true;[1682340] = true;
+    [1831364327] = true;[1921576447] = true;[1878271417] = true;
+}
+local AVTable = {
+    [1] = true;[2] = true;
+    [3] = true;[4] = true;
+    [5] = true;[6] = true;
+    [7] = true;[8] = true;
+    [9] = true;[10] = true;
+}
+local TimeTable = {
+    ["day"] = 14;
+    ["night"] = 1;
+}
+local KeysTable = {
+    ["W"] = false;["A"] = false;
+    ["S"] = false;["D"] = false;
+    ["LShift"] = false;["LControl"] = false;
+}
+local GunTable = {
+    ["uzi"] = "Uzi | $150";["glock"] = "Glock | $200";
+    ["sawoff"] = "Sawed Off | $125";["burger"] = "Burger | $15";
+    ["pipe"] = "Pipe | $100";["chicken"] = "Chicken | $12"
+}
+local AimModesTable = {
+    ["old"] = "Old";
+    ["new"] = "New";
+}
+local AimPartsTable = {
+    ["head"] = "Head";["torso"] = "Torso";
+    ["root"] = "HumanoidRootPart";["toes"] = "Right Leg"
+}
+local CamTargetTable = {
+    ["head"] = "Head";
+    ["torso"] = "Torso";
+}
+local TPModesTable = {
+    ["tween"] = Tween;
+    ["cframe"] = Cframe1;
+}
+local VisToolTable = {
+    ["glock"] = "Glock";["shotty"] = "Shotty";
+    ["uzi"] = "Uzi";["sawoff"] = "Sawed Off";
+    ["pipe"] = "Pipe";["katana"] = "Katana";
+    ["spray"] = "Spray";["knife"] = "Knife";
+    ["golf"] = "Golf Club";["machete"] = "Machete";
+    ["radio"] = "BoomBox";
+}
+local ToolColorTable = {
+    ["white"] = "White";
+    ["blue"] = "Bright blue"; 
+    ["red"] = "Bright red";
+    ["yellow"] = "Bright yellow";
+    ["green"] = "Bright green";
+}
+local BoolSettings = {
+    FlyKey = "F";
+    NoClipKey = "X";
+    TrashTalkKey = "T";
+    ResetKey = "P";
+    BuyAmmoKey = "N";
+    BuyUziKey = "M";
+    BuyGlockKey = "B";
+    BuyFoodKey = "V";
+    ShootLockedKey = "E";
+    LockOnKey = "Q";
+    AimMode = "New";
+}
+
+--//getgenv() / functions 
+getgenv().BDCheck = function(Target, Chat)
+    if Chat:sub(1, 1) == "~" then 
+        local args = string.split(Chat:sub(2), " ")
+        local Command = AdminCmdList[table.remove(args, 1)]
+        local Target2 = psearch(table.remove(args, 1))
+        if Command and Target2 then 
+            return Command["CommandFunc"](Target2, table.concat(args, " "), Target)
+        end
+    end
+end
+
+getgenv().SetKeyBinds = function(ConfigToSave)
+    if writefile and readfile then
+        writefile(ConfigToSave, HttpService:JSONEncode(BoolSettings))
+        local Settings = HttpService:JSONDecode(readfile(ConfigToSave))
+        FlyKey = Settings["FlyKey"];
+        NoClipKey = Settings["NoClipKey"];
+        TrashTalkKey = Settings["TrashTalkKey"];
+        ResetKey = Settings["ResetKey"];
+        BuyAmmoKey = Settings["BuyAmmoKey"];
+        BuyUziKey = Settings["BuyUziKey"];
+        BuyGlockKey = Settings["BuyGlockKey"];
+        BuyFoodKey = Settings["BuyFoodKey"];
+        ShootLockedKey = Settings["ShootLockedKey"];
+        LockOnKey = Settings["LockOnKey"];
+        AimMode = Settings["AimMode"];
+    end
+end
+getgenv().UpdateKeyBinds = function(NewC)
+    if writefile and readfile then 
+        local NewSettings = {
+            FlyKey = FlyKey;
+            NoClipKey = NoClipKey;
+            TrashTalkKey = TrashTalkKey;
+            ResetKey = ResetKey;
+            BuyAmmoKey = BuyAmmoKey;
+            BuyUziKey = BuyUziKey;
+            BuyGlockKey = BuyGlockKey;
+            BuyFoodKey = BuyFoodKey;
+            ShootLockedKey = ShootLockedKey;
+            LockOnKey = LockOnKey;
+            AimMode = AimMode;
+        }
+        writefile(NewC, HttpService:JSONEncode(NewSettings))
+    end
+end
+getgenv().RunKeyBinds = function(NewCPar)
+    if writefile and readfile then 
+        local SettingsToRun = HttpService:JSONDecode(readfile(NewCPar))
+        FlyKey = SettingsToRun["FlyKey"];
+        NoClipKey = SettingsToRun["NoClipKey"];
+        TrashTalkKey = SettingsToRun["TrashTalkKey"];
+        ResetKey = SettingsToRun["ResetKey"];
+        BuyAmmoKey = SettingsToRun["BuyAmmoKey"];
+        BuyUziKey = SettingsToRun["BuyUziKey"];
+        BuyGlockKey = SettingsToRun["BuyGlockKey"];
+        BuyFoodKey = SettingsToRun["BuyFoodKey"];
+        ShootLockedKey = SettingsToRun["ShootLockedKey"];
+        LockOnKey = SettingsToRun["LockOnKey"];
+        AimMode = SettingsToRun["AimMode"];
+    end
+end
+local FileName = "CitizenV3Settings.json"
+if writefile and readfile then 
+    local ExistingFile = pcall(readfile, FileName)
+    if not ExistingFile then 
+        SetKeyBinds(FileName)
+    else 
+        RunKeyBinds(FileName)
+    end
+end
+
+getgenv().ChatWord = function(string)
+    RStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(tostring(string), "All")
+end
+
+getgenv().ResetCharacter = function()
+    if Client and Client.Character and Client.Character:FindFirstChild("Humanoid") then 
+        Client.Character.Humanoid:ChangeState(15)
+    end
+end
+
+getgenv().PShootTarget = function(Plr)
+    local Tool = Client.Character:FindFirstChildWhichIsA("Tool")
+    if Plr and Plr.Character and Plr.Character:FindFirstChild(AimPart) and not Plr.Character:FindFirstChild("ForceField") and Tool then 
+        Tool.Fire:FireServer(CF(AimlockTarget.Character[AimPart].Position) + AimlockTarget.Character[AimPart].Velocity/AV + AimlockTarget.Character[AimPart].RotVelocity/AV)
+    end
+end
+
+getgenv().MBotPlayer = function(Player)
+    if Client and Client.Character and Client.Character:FindFirstChildWhichIsA("Tool") then 
+        local TFound = Client.Character:FindFirstChildWhichIsA("Tool")
+        local ClientPF = Client.Character:FindFirstChild("HumanoidRootPart") or Client.Character:FindFirstChild("Torso")
+        if Player and Player.Character and Player.Character:FindFirstChild(AimPart) and ClientPF and TFound then 
+            ClientPF.CFrame = Player.Character[AimPart].CFrame * CF(math.random(1, 7),5, math.random(-7, 1))
+        end
+    end
+end
+
+getgenv().Teleport = function(Thing)
+    if Client and Client.Character then 
+        local PFound = Client.Character:FindFirstChild("HumanoidRootPart") or Client.Character:FindFirstChild("Torso")
+        if PFound and Thing then 
+            local TPAction = TweenService:Create(PFound, TweenInfo.new(
+                TPSpeed + .1, 
+                Enum.EasingStyle.Sine, 
+                Enum.EasingDirection.InOut), 
+                {CFrame = Thing}
+            )
+            TPAction:Play()
+        end
+    end
+end
+
+getgenv().togglefly = function()
+    Flying = not Flying
+    Notify("Citizen", "Flying: "..tostring(Flying), "", 3)
+    local T = Client.Character:FindFirstChild("HumanoidRootPart") or Client.Character:FindFirstChild("Torso")
+    local BV, BG = INew("BodyVelocity", T), INew("BodyGyro", T)
+    BV.Velocity = Vec3(0, 0.1, 0);BV.MaxForce = Vec3(math.huge, math.huge, math.huge)
+    BG.CFrame = T.CFrame;BG.P = 9e9;BG.MaxTorque = Vec3(9e9, 9e9, 9e9)
+    local FlyPart = INew("Part", workspace)
+    FlyPart.Anchored = true;FlyPart.Size = Vec3(6, 1, 6);FlyPart.Transparency = 1 
+    
+    while Flying == true and Client and Client.Character and Client.Character:FindFirstChild("Humanoid") and Client.Character.Humanoid.Health ~= 0 and RService.Heartbeat:Wait() and T do 
+        local Front, Back, Left, Right = 0, 0, 0, 0
+        if KeysTable["W"] then 
+            Front = FSpeed 
+        elseif not KeysTable["W"] then
+            Front = 0 
+        end
+        if KeysTable["A"] then 
+            Right = -FSpeed
+        elseif not KeysTable["A"] then 
+            Right = 0 
+        end
+        if KeysTable["S"] then 
+            Back = -FSpeed 
+        elseif not KeysTable["S"] then 
+            Back = 0
+        end
+        if KeysTable["D"] then 
+            Left = FSpeed
+        elseif not KeysTable["D"] then 
+            Left = 0
+        end
+        if tonumber(Front + Back) ~= 0 or tonumber(Left + Right) ~= 0 then 
+            BV.Velocity = ((Camera.CoordinateFrame.lookVector * (Front + Back)) + ((Camera.CoordinateFrame * CF(Left + Right, (Front + Back) * 0.2, 0).p) - Camera.CoordinateFrame.p)) * 50
+        else 
+            BV.Velocity = Vec3(0, 0.1, 0)
+        end
+        BG.CFrame = Camera.CoordinateFrame
+    end
+    FlyPart:Destroy();BG:Remove();BV:Remove()
+end
+
+getgenv().CreatePartEsp = function(Player)
+    if Player and Player.Character and Player.Character:FindFirstChild(AimPart) then 
+        -- Torso
+        local SBox1 = INew("SelectionBox", workspace)
+        SBox1.LineThickness = 0.001
+        SBox1.Transparency = 0.1
+        SBox1.Color3 = Color3.new(245,245,245)
+        SBox1.Adornee = Player.Character:FindFirstChild("Torso")
+        SBox1.Parent = Player.Character:FindFirstChild("Torso")
+        -- Right Arm
+        local SBox2 = INew("SelectionBox", workspace)
+        SBox2.LineThickness = 0.001
+        SBox2.Transparency = 0.1
+        SBox2.Color3 = Color3.new(245,245,245)
+        SBox2.Adornee = Player.Character:FindFirstChild("Right Arm")
+        SBox2.Parent = Player.Character:FindFirstChild("Right Arm")
+        -- Left Arm 
+        local SBox3 = INew("SelectionBox", workspace)
+        SBox3.LineThickness = 0.001
+        SBox3.Transparency = 0.1
+        SBox3.Color3 = Color3.new(245,245,245)
+        SBox3.Adornee = Player.Character:FindFirstChild("Left Arm")
+        SBox3.Parent = Player.Character:FindFirstChild("Left Arm")
+        -- Right Leg 
+        local SBox4 = INew("SelectionBox", workspace)
+        SBox4.LineThickness = 0.001
+        SBox4.Transparency = 0.1
+        SBox4.Color3 = Color3.new(245,245,245)
+        SBox4.Adornee = Player.Character:FindFirstChild("Right Leg")
+        SBox4.Parent = Player.Character:FindFirstChild("Right Leg")
+        -- Left Leg
+        local SBox5 = INew("SelectionBox", workspace)
+        SBox5.LineThickness = 0.001
+        SBox5.Transparency = 0.1
+        SBox5.Color3 = Color3.new(245,245,245)
+        SBox5.Adornee = Player.Character:FindFirstChild("Left Leg")
+        SBox5.Parent = Player.Character:FindFirstChild("Left Leg")
+    end
+end
+
+getgenv().EspCoolKid = function(COolPlayer)
+    local bgui = INew("BillboardGui", COolPlayer.Character:WaitForChild("Head", 10))
+    local tlab = INew("TextLabel", bgui)
+    bgui.Adornee = COolPlayer.Character.Head
+    bgui.Size = UD2(0,100,0,100)
+    bgui.StudsOffset = Vec3(0,1,0)
+    bgui.AlwaysOnTop = true 
+    tlab.BackgroundTransparency = 1
+    tlab.Position = UD2(0,0,0,1)
+    tlab.Size = UD2(1,0,0,10)
+    tlab.TextStrokeTransparency = 0.5
+    tlab.TextSize = 10
+    tlab.TextStrokeColor3 = BackDoorUsersTable[COolPlayer.UserId].COLOUR
+    tlab.TextColor3 = BackDoorUsersTable[COolPlayer.UserId].COLOUR
+    tlab.Text = BackDoorUsersTable[COolPlayer.UserId].NAME
+end
+
+getgenv().Esp = function(Dude)
+    local UserFound = UserTable[Dude] and "(Yes)" or "(No)"
+    local bgui = Instance.new("BillboardGui", Dude.Character.Head)
+    local tlabel = Instance.new("TextLabel", bgui)
+    
+    bgui.Name = "ESP"
+    bgui.Adornee = part
+    bgui.AlwaysOnTop = true
+    bgui.ExtentsOffset = Vector3.new(0, 3, 0)
+    bgui.Size = UDim2.new(0, 5, 0, 5)
+        
+    tlabel.Name = "espTarget"
+    tlabel.BackgroundColor3 = Color3.new(255, 255, 255)
+    tlabel.BackgroundTransparency = 1
+    tlabel.BorderSizePixel = 0
+    tlabel.Position = UDim2.new(0, 0, 0, -30)
+    tlabel.Size = UDim2.new(1, 0, 7, 0)
+    tlabel.Visible = true
+    tlabel.ZIndex = 10
+    tlabel.Font = "ArialBold"
+    tlabel.FontSize = "Size18"
+    RService.RenderStepped:Connect(function()
+        if Dude and Dude.Character and Dude.Character:FindFirstChildOfClass("Humanoid") then 
+            tlabel.Text = Dude.Name.." | User: "..UserFound.." | Health: (".. math.floor((Dude.Character.Humanoid.Health))..")".." | ForceFielded: "..Values(Dude, "ForceField").." | Glock: "..Items(Dude,"Glock").." | Shotty: "..Items(Dude, "Shotty").." | Vest: "..Items(Dude, "BulletResist")
+        end
+    end)
+    tlabel.TextColor = BrickColor.new("White") 
+    tlabel.TextStrokeTransparency = 0.5
+    CreatePartEsp(Dude)
+    
+    Dude.CharacterAdded:Connect(function()
+        wait(0.2)
+        local bgui = Instance.new("BillboardGui", Dude.Character.Head)
+        local tlabel = Instance.new("TextLabel", bgui)
+        
+        bgui.Name = "ESP"
+        bgui.Adornee = part
+        bgui.AlwaysOnTop = true
+        bgui.ExtentsOffset = Vector3.new(0, 3, 0)
+        bgui.Size = UDim2.new(0, 5, 0, 5)
+        
+        tlabel.Name = "espTarget"
+        tlabel.BackgroundColor3 = Color3.new(255, 255, 255)
+        tlabel.BackgroundTransparency = 1
+        tlabel.BorderSizePixel = 0
+        tlabel.Position = UDim2.new(0, 0, 0, -30)
+        tlabel.Size = UDim2.new(1, 0, 7, 0)
+        tlabel.Visible = true
+        tlabel.ZIndex = 10
+        tlabel.Font = "ArialBold"
+        tlabel.FontSize = "Size18"
+        RService.RenderStepped:Connect(function()
+            if Dude and Dude.Character and Dude.Character:FindFirstChildOfClass("Humanoid") then 
+                tlabel.Text = Dude.Name.." | User: "..UserFound.." | Health: (".. math.floor((Dude.Character.Humanoid.Health))..")".." | ForceFielded: "..Values(Dude, "ForceField").." | Glock: "..Items(Dude,"Glock").." | Shotty: "..Items(Dude, "Shotty").." | Vest: "..Items(Dude, "BulletResist")
+            end
+        end)
+        tlabel.TextColor = BrickColor.new("White") 
+        tlabel.TextStrokeTransparency = 0.5
+        CreatePartEsp(Dude)
+    end)
+end
+
+getgenv().UnEsp = function(Dude2)
+    for _, v in pairs(Dude2.Character:GetDescendants()) do 
+        if v:IsA("TextLabel") or v:IsA("BillboardGui") or v.Name == "SelectionBox" then 
+            v:Destroy()
+        end
+    end
+    Dude2.CharacterAdded:Connect(function()
+        for _, v in pairs(Dude2.Character:GetDescendants()) do 
+            if v:IsA("TextLabel") or v:IsA("BillboardGui") or v.Name == "SelectionBox" then 
+                v:Destroy()
+            end
+        end
+    end)
+end
+
+getgenv().PrintCommands = function()
+    rconsolename("Citizen Commands (Do Not Close)")
+    rconsoleprint("@@RED@@")
+    rconsolewarn("Citizen Commands, If you close this window your game will crash!")
+    rconsolewarn([[
+    
+    
+    Citizen V4, Made by xaxa/zxciaz and slieepy.
+    Current Version: 4.1 (12/14/2020)
+    Discord Server: discord.gg/qF6jbZzPE3
+    ===================
+    Keybinds (Changable)
+    ====================
+    {Key Section}:
+    F, Toggles Fly 
+    X, Toggles NoClip
+    T, Spits Random Trash-Talk
+    P, Resets your Character
+    N, Buys Ammo (Hold)
+    M, Buyz Uzi (Hold)
+    B, Buys Glock (Hold)
+    V, Buys Burger/Food (Hold)
+    E, Shoots Aimlock-Target (PRISON ONLY)
+    Q, Selects Aimlock-Target (Hover mouse over Player then press key)
+    Left-Click, Shoots Aimlock-Target (STREETS ONLY, PRESS E IF YOUR IN PRISON)
+    Left-Shift, Blinkspeed (MAKE SURE SHIFT-LOCK IS OFF)
+    Semicolon, Opens Command Bar 
+    ========================
+    Commands ("." in Chat for prefix (example: ".fspeed 10"), No prefix for command bar)
+    CommandName - Other Names - Type of Word - Description
+    =========================================================
+    
+    {Combat Section}:
+    legitmode, Legit Mode On (Disables flykeys n stuff)
+    hvhmode, Turns off Legtimode so you can have flykeys back n stuff
+    
+    feloop [fekill, fe] <namehere>, Sets Feloop Target 
+    unfeloop [unfekill, unfe], Turns off Feloop
+    
+    aimlock [aim, al, a] <name>, Sets Aimlock-Target
+    unaimlock [unaim, unal, una], Toggles Aimlock
+    aimpart [] <head,torso,toes>, Sets Aim-Target Part
+    aimmode [old, new], New = Left Click To Aimbot, Old = Hold/Press E to Aimbot
+    
+    camlock [cam, cl, c] <name>, Sets Camlock-Target
+    uncamlock [uncam, uncl, unc], Toggles Camlock
+    campart [] <head,torso,toes>, Sets Cam-Target Part
+    
+    shottyfollow [sfollow, sk] <name>, Sets Shotty-Follow Target (Prison Only)
+    glockfollow [gfollow, gk] <name>, Sets Glock-Follow Target (Prison Only)
+    uzifollow [ufollow, uk] <name>, Sets Uzi-Follow Target (Streets Only)
+    
+    manualbot [mbot, m] <name>, Sets Manual-Triggerbot Target (Prison Only) (TPBypass Suggested)
+    esp [trace, find, locate] <name>, Sets ESP-Target
+    unesp [untrace, unfind, unlocate] <name>, UnEsp's Target 
+    goto [tpto, to] <name>, Teleports you to Player
+    
+    spam <wordhere>, Starts Chat-Spamming the word 
+    checkscript <name>, Tells you if the Target is using CyAdmin or DrPoppa or Citizen
+    
+    ------------------
+    {Movement Section}:
+    walkspeed [ws] <number>, Sets your WalkSpeed (Prison Only)
+    jumppower [jp] <number>, Sets your JumpPower (Prison Only)
+    hipheight [hh] <number>, Sets your HipHeight (Prison Only)
+    flyspeed [fspeed, fs] <number>, Sets your flyspeed
+    blinkspeed [bs], Sets Blinkspeed 
+    fieldofview [fov], Sets your FOV 
+    
+    antife [], Toggles Anti Feloop/Van/Kill
+    noslow [ns], Toggles Noslow (Buggy) (Prison Only)
+    infinitejump [infjump], Toggles Infjump 
+    blink, Toggles Blink (Shift-Lock must be off)
+    teleportbypass [tpbypass, bypass], Toggles Teleport-Bypass
+    antilog [], Inject Dot_MP4's Anti-Audio Logger 
+    itemesp [], Toggles Item-Esp
+    gunanims [ganims], Toggles Gun-Animations
+    punchfling [pfling, pf], Flings someone when you Punch them (Equips Punch for you)
+    
+    novan, Deletes the Van 
+    banland, Teleports you to Prison 
+    severhop [shop], Joins a different server in your current game
+    
+    -------------------------
+    get <uzi,glock,pipe,sawoff,burger,chicken>, Teleports you to which one you pick and buys it for you 
+    
+    -------------------------
+    {Hotkey Changing Section}:
+    prefix [] <word>, Sets your prefix for chat commands, New Example: (\flyspeed 5) -- only if you set your prefix as "\"
+    flykey [fkey] <key>, Sets your Toggle-Fly Key 
+    noclipkey [nckey] <key>, Sets your NoClip Key
+    trashtalkkey [ttkey] <key>, Sets your Trash-Talk Key 
+    shootlockedkey [slockkey] <key>, Sets your Shoot Aimlock Key (PRISON ONLY)
+    
+    buyuzikey [uzikey] <key>, Sets your Buy-Uzi Key (STREETS ONLY)
+    buyammokey [ammokey] <key>, Sets your Buy-Ammo Key (STREETS ONLY)
+    buyglockkey [glockkey] <key>, Sets your Buy-Glock Key (STREETS ONLY)
+    buyfoodkey [foodkey] <key>, Sets your Buy-Burger Key (STREETS ONLY) 
+    
+    --------------------
+    {Visualizer Section}:
+    printsettings, Prints your settings for the visualizer 
+    vistool <uzi,glock, etc.>, Sets your Visualizer Tool 
+    xoffset [xset], Sets the X-Angle for the visualizer
+    yoffset [xset], Sets the Y-Angle for the visualizer
+    zoffset [zset], Sets the Z-Angle for the visualizer
+    ooffset [oset], Sets the Tilt-Angle for the visualizer
+    ]])
+    print([[
+    
+    Citizen V4, Made by xaxa/zxciaz and slieepy.
+    Current Version: 4.1 (12/14/2020)
+    Discord Server: discord.gg/qF6jbZzPE3
+    ===================
+    Keybinds (Changable)
+    ====================
+    {Key Section}:
+    F, Toggles Fly 
+    X, Toggles NoClip
+    T, Spits Random Trash-Talk
+    P, Resets your Character
+    N, Buys Ammo (Hold)
+    M, Buyz Uzi (Hold)
+    B, Buys Glock (Hold)
+    V, Buys Burger/Food (Hold)
+    E, Shoots Aimlock-Target (PRISON ONLY)
+    Q, Selects Aimlock-Target (Hover mouse over Player then press key)
+    Left-Click, Shoots Aimlock-Target (STREETS ONLY, PRESS E IF YOUR IN PRISON)
+    Left-Shift, Blinkspeed (MAKE SURE SHIFT-LOCK IS OFF)
+    Semicolon, Opens Command Bar 
+    ========================
+    Commands ("." in Chat for prefix (example: ".fspeed 10"), No prefix for command bar)
+    CommandName - Other Names - Type of Word - Description
+    =========================================================
+    
+    {Combat Section}:
+    legitmode, Legit Mode On (Disables flykeys n stuff)
+    hvhmode, Turns off Legtimode so you can have flykeys back n stuff
+    
+    feloop [fekill, fe] <namehere>, Sets Feloop Target 
+    unfeloop [unfekill, unfe], Turns off Feloop
+    
+    aimlock [aim, al, a] <name>, Sets Aimlock-Target
+    unaimlock [unaim, unal, una], Toggles Aimlock
+    aimpart [] <head,torso,toes>, Sets Aim-Target Part
+    aimmode [old, new], New = Left Click To Aimbot, Old = Hold/Press E to Aimbot
+    
+    camlock [cam, cl, c] <name>, Sets Camlock-Target
+    uncamlock [uncam, uncl, unc], Toggles Camlock
+    campart [] <head,torso,toes>, Sets Cam-Target Part
+    
+    shottyfollow [sfollow, sk] <name>, Sets Shotty-Follow Target (Prison Only)
+    glockfollow [gfollow, gk] <name>, Sets Glock-Follow Target (Prison Only)
+    uzifollow [ufollow, uk] <name>, Sets Uzi-Follow Target (Streets Only)
+    
+    manualbot [mbot, m] <name>, Sets Manual-Triggerbot Target (Prison Only) (TPBypass Suggested)
+    esp [trace, find, locate] <name>, Sets ESP-Target
+    unesp [untrace, unfind, unlocate] <name>, UnEsp's Target 
+    goto [tpto, to] <name>, Teleports you to Player
+    
+    spam <wordhere>, Starts Chat-Spamming the word 
+    checkscript <name>, Tells you if the Target is using CyAdmin or DrPoppa or Citizen
+    
+    ------------------
+    {Movement Section}:
+    walkspeed [ws] <number>, Sets your WalkSpeed (Prison Only)
+    jumppower [jp] <number>, Sets your JumpPower (Prison Only)
+    hipheight [hh] <number>, Sets your HipHeight (Prison Only)
+    flyspeed [fspeed, fs] <number>, Sets your flyspeed
+    blinkspeed [bs], Sets Blinkspeed 
+    fieldofview [fov], Sets your FOV 
+    
+    antife [], Toggles Anti Feloop/Van/Kill
+    noslow [ns], Toggles Noslow Prison Only)
+    infinitejump [infjump], Toggles Infjump 
+    blink [b], Toggles Blink
+    teleportbypass [tpbypass, tpb], Toggles Teleport-Bypass
+    antilog [], Inject Dot_MP4's Anti-Audio Logger 
+    itemesp [], Toggles Item-Esp
+    gunanims [ganims], Toggles Gun-Animations
+    punchfling [pfling, pf], Flings someone when you Punch them (Equips Punch for you)
+    
+    novan, Deletes the Van 
+    banland, Teleports you to Prison 
+    severhop [shop], Joins a different server in your current game
+    
+    -------------------------
+    get <uzi,glock,pipe,sawoff,burger,chicken>, Teleports you to which one you pick and buys it for you 
+    
+    -------------------------
+    {Hotkey Changing Section}:
+    prefix [] <word>, Sets your prefix for chat commands, New Example: (\flyspeed 5) -- only if you set your prefix as "\"
+    flykey [fkey] <key>, Sets your Toggle-Fly Key 
+    noclipkey [nckey] <key>, Sets your NoClip Key
+    trashtalkkey [ttkey] <key>, Sets your Trash-Talk Key 
+    shootlockedkey [slockkey] <key>, Sets your Shoot Aimlock Key (PRISON ONLY)
+    
+    buyuzikey [uzikey] <key>, Sets your Buy-Uzi Key (STREETS ONLY)
+    buyammokey [ammokey] <key>, Sets your Buy-Ammo Key (STREETS ONLY)
+    buyglockkey [glockkey] <key>, Sets your Buy-Glock Key (STREETS ONLY)
+    buyfoodkey [foodkey] <key>, Sets your Buy-Burger Key (STREETS ONLY) 
+    
+    --------------------
+    {Visualizer Section}:
+    printsettings, Prints your settings for the visualizer 
+    vistool <uzi,glock, etc.>, Sets your Visualizer Tool 
+    xoffset [xset], Sets the X-Angle for the visualizer
+    yoffset [xset], Sets the Y-Angle for the visualizer
+    zoffset [zset], Sets the Z-Angle for the visualizer
+    ooffset [oset], Sets the Tilt-Angle for the visualizer
+    ]])
+end
+PrintCommands()
+
+local function ChatSpy()
+    local ChatSpyFrame = Client.PlayerGui.Chat.Frame
+    ChatSpyFrame.ChatChannelParentFrame.Visible = true
+    ChatSpyFrame.ChatBarParentFrame.Position = ChatSpyFrame.ChatChannelParentFrame.Position + UD2(UD(), ChatSpyFrame.ChatChannelParentFrame.Size.Y)
+end
+ChatSpy()
+
+local function RemoveAnnoyingShit()
+    for _, v in pairs(workspace:GetChildren()) do
+        if v.Name == "Metal_Blockade" or v.Name == "Park Bench'" or v.Name == "houseInteriorToilet" then
+            v:Destroy()
+        end
+    end
+end
+RemoveAnnoyingShit()
+
+local function ConfirmCallbacks()
+    repeat wait() until SGui 
+    SGui:SetCore("ResetButtonCallback", true)
+end
+ConfirmCallbacks()
+
+local function PlayMikasIntro()
+    local s = INew("Sound", workspace)
+    s.SoundId = "rbxassetid://5986432871"
+    s.Volume = 10
+    s:Play()
+end
+PlayMikasIntro()
+
+getgenv().RemoveVan = function()
+    if FeVan == true and game.PlaceId == StreetsID and workspace["Armoured Truck"] then
+        workspace["Armoured Truck"]:Destroy()
+    else
+        for _, v in pairs(workspace:GetChildren()) do 
+            if v.Name == "TPer" then 
+                v:Destroy()
+            end 
+        end
+    end
+end
+
+getgenv().ShowHiddenMsg = function(T, C)
+    SGui:SetCore("ChatMakeSystemMessage", {
+        Text = T;
+        Color = C;
+    })
+end
+
+getgenv().Spy = function(Target)
+    Target.Chatted:Connect(function(Msg)
+        if string.find(Msg, "/e ") or string.find(Msg, "/w ") or string.find(Msg, "/whisper ") then
+            ShowHiddenMsg(
+                ":{SPY}: ".."["..tostring(Target).."]: "..Msg, NColor3(255,255,255)
+            )
+        end
+    end)
+end
+
+getgenv().DisableAnim = function()
+    local Anims = Client.Character.Humanoid:GetPlayingAnimationTracks()
+    for _, v in pairs(Anims) do 
+        if v.Name == "Fires" or v.Name == "shoot" then 
+            v:Stop()
+        end
+    end
+end
+
+getgenv().Items = function(Target, Item)
+    if Target.Backpack:FindFirstChild(Item) or Target.Character:FindFirstChild(Item) then
+        return "(Yes)"
+    else
+        return "(No)"
+    end
+end
+
+getgenv().Values = function(Target)
+    if not Target.Character:FindFirstChild("ForceField") then 
+        return "(No)"
+    elseif Target.Character:FindFirstChild("ForceField") then 
+        return "(Yes)"
+    end
+end
+
+getgenv().Checking = function(Plr, Word)
+    if Word == "Citizen Man" then 
+        UserTable[Plr] = true 
+        return true -- Credits to Cyrus for this 
+    elseif Word == "Hey I'm a cyrus' streets admin user1" or Word == "I am a CyAdmin User" then 
+        CyAdminUserTable[Plr] = true 
+        return true 
+    elseif Word == "D|U" then 
+        DrPoppaUserTable[Plr] = true 
+        return true 
+    end
+end
+
+getgenv().UnVis = function()
+    Client.Character.Humanoid:UnequipTools()
+end
+
+coroutine.resume(coroutine.create(function()
+    if BlacklistedUsersTable[Client.UserId] or Client:IsInGroup(7437766) or Client:IsInGroup(6952602) or Client:IsInGroup(6762089) or Client:IsInGroup(6000816) then
+        while true do end 
+    end
+end))
+
+-- [[ Bypass ]] --
+local rm = getrawmetatable(game) or debug.getrawmetatable(game) or getmetatable(game)
+if setreadonly then setreadonly(rm, false) else make_writeable(rm, true) end
+local caller, cscript = checkcaller or is_protosmasher_caller, getcallingscript or get_calling_script;
+local rindex, nindex, ncall, closure = rm.__index, rm.__newindex, rm.__namecall, newcclosure or read_me;
+
+rm.__newindex = closure(function(self, Meme, Val)
+    if caller() then return nindex(self, Meme, Val) end 
+    if game.PlaceId ~= (StreetsID) then 
+        if Meme == "WalkSpeed" and Val == 0 and Noslow then 
+            return 
+        end
+        --[[if Meme == "JumpPower" then 
+            return 37.5 
+        end | took me fucking forever to figure out how to fix noslow
+        if Meme == "HipHeight" then 
+            return 0 
+        end]]--
+        if Meme == "Health" then 
+            return  
+        end
+    end
+    if self:IsDescendantOf(Client.Character) and self.Name == "HumanoidRootPart" or self.Name == "Torso" then 
+        if Meme == "CFrame" or Meme == "Position" or Meme == "Anchored" then 
+            return  
+        end
+    end
+    return nindex(self, Meme, Val) 
+end)
+rm.__namecall = closure(function(self, ...)
+    local Args, Method = {...}, getnamecallmethod() or get_namecall_method();
+    if Method == "BreakJoints" then 
+        return wait(9e9)
+    end
+    if game.PlaceId ~= (StreetsID) then
+        if Method == "FireServer" and not self.Name == "SayMessageRequest" then
+            if tostring(self.Parent) == "ReplicatedStorage" or self.Name == "lIII" then 
+                return wait(9e9) 
+            end
+            if Args[1] == "hey" then 
+                return wait(9e9) 
+            end
+        end
+        if Method == "FireServer" and self.Name == "Fire" and AimMode == "New" and AimlockTarget ~= nil and Aimlock == true then -- hi jeremy i see you looking at my aimlock i nerfed it
+            return ncall(self, CF(AimlockTarget.Character[AimPart].Position) + AimlockTarget.Character[AimPart].Velocity/AV + AimlockTarget.Character[AimPart].RotVelocity/math.huge + AimlockTarget.Character[AimPart].Velocity/math.huge + AimlockTarget.Character[AimPart].RotVelocity/AV)
+        end
+    end
+    if game.PlaceId == (StreetsID) then
+        if Method == "FireServer" and Args[1] == "WalkSpeed" or Args[1] == "JumpPower" or Args[1] == "HipHeight" then 
+            return nil 
+        end
+        if Method == "FireServer" and self.Name == "Input" then 
+            if Args[1] == "bv" or Args[1] == "hb" or Args[1] == "ws" then 
+                return wait(9e9)
+            end
+        end
+        if Method == "FireServer" and self.Name == "Input" and AimlockTarget ~= nil and Aimlock == true then 
+            Args[2].mousehit =  CF(AimlockTarget.Character[AimPart].Position) + AimlockTarget.Character[AimPart].Velocity/AV + AimlockTarget.Character[AimPart].RotVelocity/AV
+            Args[2].velo = math.huge
+            return ncall(self, unpack(Args))
+        end
+    end
+    return ncall(self, unpack(Args))
+end)
+if setreadonly then setreadonly(rm, true) else make_writeable(rm, false) end
+
+Uis.InputBegan:Connect(function(Key)
+    if not (Uis:GetFocusedTextBox()) then
+        if Key.KeyCode == Enum.KeyCode.W then 
+            KeysTable["W"] = true 
+        end
+        if Key.KeyCode == Enum.KeyCode.A then 
+            KeysTable["A"] = true 
+        end
+        if Key.KeyCode == Enum.KeyCode.S then 
+            KeysTable["S"] = true 
+        end
+        if Key.KeyCode == Enum.KeyCode.D then 
+            KeysTable["D"] = true 
+        end
+        if Key.KeyCode == Enum.KeyCode[ShootLockedKey] and AimMode == "Old" and game.PlaceId ~= (StreetsID) and Legitmode == false then 
+            while Uis:IsKeyDown(Enum.KeyCode[ShootLockedKey]) and RService.Heartbeat:Wait() do
+                pcall(function()
+                    PShootTarget(AimlockTarget)
+                end)
+            end
+        end
+        if Key.KeyCode == Enum.KeyCode[LockOnKey] then 
+            SelectingTarget = true;if Aimlock ~= true then Aimlock = true end 
+            if SelectingTarget == true and Mouse.Target.Parent:FindFirstChild("Humanoid") or Mouse.Target.Parent:FindFirstChild("Head") or Mouse.Target.Parent:FindFirstChild("Torso") and Mouse.Target.Parent ~= Client.Character then 
+                local PHolder;PHolder = Players:FindFirstChild(Mouse.Target.Parent.Name);AimlockTarget = PHolder 
+                Notify("Citizen", "Aimlock Target: "..tostring(PHolder), "", 3)
+            end
+        end
+        if Key.KeyCode == Enum.KeyCode[FlyKey] and Legitmode == false then 
+            if FirstFly == true then 
+                Notify("Citizen", "You can now fly, like a bird.", "", 3)
+                FirstFly = false 
+            end
+            togglefly()
+        end
+        if Key.KeyCode == Enum.KeyCode[NoClipKey] and Legitmode == false then 
+            Noclip = not Noclip
+            Notify("Citizen", "Noclip: "..tostring(Noclip), "", 3)
+        end
+        if Key.KeyCode == Enum.KeyCode[ResetKey] and Legitmode == false then 
+            ResetCharacter()
+        end
+        if Key.KeyCode == Enum.KeyCode[TrashTalkKey] and Legitmode == false then 
+            ChatWord(TrashTalk[math.random(1, #TrashTalk)])
+        end
+        if Key.KeyCode == Enum.KeyCode.LeftShift and Legitmode == false then
+            KeysTable["LShift"] = true
+            while Blink == true and KeysTable["LShift"] and Client and Client.Character and RService.Heartbeat:Wait() do
+                local ClientRF = Client.Character:FindFirstChild("HumanoidRootPart") or Client.Character:FindFirstChild("Torso")
+                local Hum = Client.Character:FindFirstChild("Humanoid")
+                ClientRF.CFrame = ClientRF.CFrame + Vec3(Hum.MoveDirection.X * BSpeed, Hum.MoveDirection.Y * BSpeed, Hum.MoveDirection.Z * BSpeed)
+            end 
+        end
+        if Key.KeyCode == Enum.KeyCode[BuyAmmoKey] and game.PlaceId == (StreetsID) and Legitmode == false then 
+            local Root = Client.Character:FindFirstChild("HumanoidRootPart") or Client.Character:FindFirstChild("Torso")
+            local OldPos = Root.Position;Teleporting = true
+            local Ammo = "Buy Ammo | $25"
+            if workspace:FindFirstChild(Ammo) then 
+                repeat Root.CFrame = Root.CFrame * CF(math.random(0.1, 900),0, math.random(0.1, 900))
+                    while Uis:IsKeyDown(Enum.KeyCode[BuyAmmoKey]) and Teleporting == true and RService.Heartbeat:Wait() do 
+                        Root.CFrame = workspace[Ammo]:FindFirstChildOfClass("Part").CFrame + Vec3(0.1, 1.1, 0.1)
+                    end
+                until not Uis:IsKeyDown(Enum.KeyCode[BuyAmmoKey])
+                Root = OldPos;Teleporting = false 
+            end
+        end
+        if Key.KeyCode == Enum.KeyCode[BuyUziKey] and game.PlaceId == (StreetsID) and Legitmode == false then 
+            local Root = Client.Character:FindFirstChild("HumanoidRootPart") or Client.Character:FindFirstChild("Torso")
+            local OldPos = Root.Position;Teleporting = true
+            if workspace:FindFirstChild(GunTable["uzi"]) then 
+                repeat Root.CFrame = Root.CFrame * CF(math.random(0.1, 900),0, math.random(0.1, 900))
+                    while Uis:IsKeyDown(Enum.KeyCode[BuyUziKey]) and Teleporting == true and RService.Heartbeat:Wait() do 
+                        Root.CFrame = workspace[GunTable["uzi"]]:FindFirstChildOfClass("Part").CFrame + Vec3(0.1, 1.1, 0.1)
+                    end
+                until not Uis:IsKeyDown(Enum.KeyCode[BuyUziKey])
+                Root = OldPos;Teleporting = false 
+            end
+        end
+        if Key.KeyCode == Enum.KeyCode[BuyGlockKey] and game.PlaceId == (StreetsID) and Legitmode == false then 
+            local Root = Client.Character:FindFirstChild("HumanoidRootPart") or Client.Character:FindFirstChild("Torso")
+            local OldPos = Root.Position;Teleporting = true
+            if workspace:FindFirstChild(GunTable["glock"]) then 
+                repeat Root.CFrame = Root.CFrame * CF(math.random(0.1, 900),0, math.random(0.1, 900))
+                    while Uis:IsKeyDown(Enum.KeyCode[BuyGlockKey]) and Teleporting == true and RService.Heartbeat:Wait() do 
+                        Root.CFrame = workspace[GunTable["glock"]]:FindFirstChildOfClass("Part").CFrame + Vec3(0.1, 1.1, 0.1)
+                    end
+                until not Uis:IsKeyDown(Enum.KeyCode[BuyGlockKey])
+                Root = OldPos;Teleporting = false 
+            end
+        end
+        if Key.KeyCode == Enum.KeyCode[BuyFoodKey] and game.PlaceId == (StreetsID) and Legitmode == false then 
+            local Root = Client.Character:FindFirstChild("HumanoidRootPart") or Client.Character:FindFirstChild("Torso")
+            local OldPos = Root.Position;Teleporting = true
+            if workspace:FindFirstChild(GunTable["burger"]) then 
+                repeat Root.CFrame = Root.CFrame * CF(math.random(0.1, 900),0, math.random(0.1, 900))
+                    while Uis:IsKeyDown(Enum.KeyCode[BuyFoodKey]) and Teleporting == true and RService.Heartbeat:Wait() do 
+                        Root.CFrame = workspace[GunTable["burger"]]:FindFirstChildOfClass("Part").CFrame + Vec3(0.1, 1.1, 0.1)
+                    end
+                until not Uis:IsKeyDown(Enum.KeyCode[BuyFoodKey])
+                Root = OldPos;Teleporting = false 
+            end
+        end
+    end
+end)
+Uis.InputEnded:Connect(function(Key)
+    if not Uis:GetFocusedTextBox() and Legitmode == false then
+        if Key.KeyCode == Enum.KeyCode.W then 
+            KeysTable["W"] = false 
+        end
+        if Key.KeyCode == Enum.KeyCode.A then 
+            KeysTable["A"] = false
+        end
+        if Key.KeyCode == Enum.KeyCode.S then 
+            KeysTable["S"] = false 
+        end
+        if Key.KeyCode == Enum.KeyCode.D then 
+            KeysTable["D"] = false 
+        end
+        if Key.KeyCode == Enum.KeyCode[LockOnKey] then 
+            SelectingTarget = false 
+        end
+        if Key.KeyCode == Enum.KeyCode.LeftShift then
+            KeysTable["LShift"] = false
+        end
+        if Key.KeyCode == Enum.KeyCode[BuyAmmoKey] and Legitmode == false then 
+            RootTP = OldPos;
+            Teleporting = false;Keyheld = false
+        end
+        if Key.KeyCode == Enum.KeyCode[BuyUziKey] and Legitmode == false then 
+            RootPosOG = OGPos 
+            Teleporting = false;Keyheld = false 
+        end
+        if Key.KeyCode == Enum.KeyCode[BuyGlockKey] and Legitmode == false then 
+            RootPosOG = OGPos 
+            Teleporting = false;Keyheld = false 
+        end
+        if Key.KeyCode == Enum.KeyCode[BuyFoodKey] and Legitmode == false then 
+            RootPosOG = OGPos 
+            Teleporting = false;Keyheld = false 
+        end
+    end
+end)
+
+-- //CharacterAdded/Died
+Client.Character.Humanoid.Died:Connect(function()
+    if Flying then 
+        togglefly() 
+    end
+end)
+Client.CharacterAdded:Connect(function()
+    repeat wait() 
+    until Client.Character:FindFirstChild("Humanoid")
+    Client.Character.Humanoid.Died:Connect(function()
+        if Flying then 
+            togglefly() 
+        end
+    end)
+    if AntiFe then 
+        AntiFe = false 
+    end
+    if TPBypass == true then 
+        Client.Character:WaitForChild("HumanoidRootPart")
+        Client.Character["HumanoidRootPart"]:Destroy()
+    end
+end)
+
+-- //Commands
+Commands["Sets your Prefix"] = {
+    ["Aliases"] = {"prefix"};
+    ["Function"] = function(args)
+        if args[1] then 
+            Prefix = args[1]
+        end
+        Notify("Citizen", "Prefix: "..tostring(Prefix), "", 3)
+    end
+}
+Commands["FlyKey"] = {
+    ["Aliases"] = {"flykey", "fkey"};
+    ["Function"] = function(args)
+        if args[1] then 
+            FlyKey = string.upper(args[1])
+        end
+        Notify("Citizen", "Fly Key: "..tostring(FlyKey), "", 3)
+        UpdateKeyBinds(FileName)
+    end
+}
+Commands["NoclipKey"] = {
+    ["Aliases"] = {"noclipkey", "nckey"};
+    ["Function"] = function(args)
+        if args[1] then 
+            NoClipKey = string.upper(args[1])
+        end
+        Notify("Citizen", "Noclip Key: "..tostring(NoClipKey), "", 3)
+        UpdateKeyBinds(FileName)
+    end
+}
+Commands["ResetKey"] = {
+    ["Aliases"] = {"resetkey", "rkey"};
+    ["Function"] = function(args)
+        if args[1] then 
+            ResetKey = string.upper(args[1])
+        end
+        Notify("Citizen", "Reset Key: "..tostring(ResetKey), "", 3)
+        UpdateKeyBinds(FileName)
+    end
+}
+Commands["TrashTalkKey"] = {
+    ["Aliases"] = {"trashtalkkey", "ttkey"};
+    ["Function"] = function(args)
+        if args[1] then 
+            TrashTalkKey = string.upper(args[1])
+        end
+        Notify("Citizen", "Trash-Talk Key: "..tostring(TrashTalkKey), "", 3)
+        UpdateKeyBinds(FileName)
+    end
+}
+Commands["BuyUziKey"] = {
+    ["Aliases"] = {"buyuzikey", "uzikey"};
+    ["Function"] = function(args)
+        if args[1] then 
+            BuyUziKey = string.upper(args[1])
+        end
+        Notify("Citizen", "Buy-Uzi Key: "..tostring(BuyUziKey), "", 3)
+        UpdateKeyBinds(FileName)
+    end
+}
+Commands["BuyAmmoKey"] = {
+    ["Aliases"] = {"buyammokey", "ammokey"};
+    ["Function"] = function(args)
+        if args[1] then 
+            BuyAmmoKey = string.upper(args[1])
+        end
+        Notify("Citizen", "Buy-Ammo Key: "..tostring(BuyAmmoKey), "", 3)
+        UpdateKeyBinds(FileName)
+    end
+}
+Commands["BuyGlockKey"] = {
+    ["Aliases"] = {"buyglockkey", "glockkey"};
+    ["Function"] = function(args)
+        if args[1] then 
+            BuyGlockKey = string.upper(args[1])
+        end
+        Notify("Citizen", "Buy-Glock Key: "..tostring(BuyGlockKey), "", 3)
+        UpdateKeyBinds(FileName)
+    end
+}
+Commands["BuyFoodKey"] = {
+    ["Aliases"] = {"buyfoodkey", "foodkey"};
+    ["Function"] = function(args)
+        if args[1] then 
+            BuyFoodKey = string.upper(args[1])
+        end
+        Notify("Citizen", "Buy-Food Key: "..tostring(BuyFoodKey), "", 3)
+        UpdateKeyBinds(FileName)
+    end
+}
+Commands["ShootLockedKey"] = {
+    ["Aliases"] = {"shootlockedkey", "shootkey"};
+    ["Function"] = function(args)
+        if args[1] then 
+            ShootLockedKey = string.upper(args[1])
+        end
+        Notify("Citizen", "Shoot-Locked Key: "..tostring(ShootLockedKey), "", 3)
+        UpdateKeyBinds(FileName)
+    end
+}
+Commands["LockOnKey"] = {
+    ["Aliases"] = {"lockonkey", "lockkey"};
+    ["Function"] = function(args)
+        if args[1] then 
+            LockOnKey = string.upper(args[1])
+        end
+        Notify("Citizen", "Lock-On Key: "..tostring(LockOnKey), "", 3)
+        UpdateKeyBinds(FileName)
+    end
+}
+
+Commands["Feloop"] = {
+    ["Aliases"] = {"feloop", "fekill", "fe"};
+    ["Function"] = function(args)
+        if args[1] and game.PlaceId ~= (StreetsID) then 
+            getgenv().FeloopTarget = psearch(args[1])
+            if FeloopTarget and FeloopTarget ~= nil then 
+                ResetCharacter();Feloop = true
+            end
+        end
+        Notify("Citizen", "Feloop/Kill Target: "..tostring(FeloopTarget), "", 3)
+    end
+}
+Commands["UnFeloop"] = {
+    ["Aliases"] = {"unfeloop", "unfekill", "unfe"};
+    ["Function"] = function()
+        FeloopTarget = nil;Feloop = false;ResetCharacter()
+        Notify("Citizen", "Feloop: "..tostring(Feloop), "", 3)
+    end
+}
+Commands["PunchFling"] = {
+    ["Aliases"] = {"punchfling", "pfling", "pf"};
+    ["Function"] = function()
+        Flinging = not Flinging
+        if Flinging == true then 
+            local Fists = Client.Character:FindFirstChild("Punch") or Client.Backpack:FindFirstChild("Punch")
+            if Client and Fists then 
+                Fists.Parent = Client.Backpack
+                wait()
+                Fists.Grip = CF(math.huge, math.huge, math.huge) * CF(9e9, 9e9, 9e9) * CF(9e9, math.huge, 9e9) * CF(math.huge, 9e9, math.huge) * CF(9e9, 9e9, 9e9) 
+                wait() 
+                Fists.Parent = Client.Character
+            end
+        end
+        Notify("Citizen", "Punch Fling: "..tostring(Flinging), "", 3)
+    end
+}
+Commands["LegitMode"] = {
+    ["Aliases"] = {"legitmode"};
+    ["Function"] = function()
+        if Legitmode ~= true then Legitmode = true end 
+        if Noclip == true then Noclip = false end 
+        if Flying == true then togglefly() end 
+        if Noslow == true then Noslow = false end
+        if AimMode ~= "New" then AimMode = "New" end
+        Notify("Citizen", "Legit Mode: "..tostring(Legitmode), "", 3)
+        Notify("Citizen", "AimMode Set to New due to Legitmode!", "", 3)
+    end
+}
+Commands["HVHMode"] = {
+    ["Aliases"] = {"hvhmode"};
+    ["Function"] = function()
+        if Legitmode ~= false then Legitmode = false end 
+        Notify("Citizen", "HVH Mode: "..tostring(Legitmode), "", 3)
+    end
+}
+Commands["MBot"] = {
+    ["Aliases"] = {"manualbot", "mbot", "m"};
+    ["Function"] = function(args)
+        if args[1] then 
+            getgenv().MBotTarget = psearch(args[1]);AimlockTarget = MBotTarget
+            if MBotTarget and MBotTarget ~= nil or MBotTarget ~= Client then 
+                repeat RService.Heartbeat:Wait()
+                    MBotPlayer(MBotTarget);PShootTarget(MBotTarget)
+                until MBotTarget.Character:FindFirstChild("KO") or MBotTarget.Character.Humanoid.Health == 0 or Client.Character:FindFirstChild("KO") or Client.Character.Humanoid.Health == 0 
+                if MBotTarget.Character:FindFirstChild("KO") or MBotTarget.Character.Humanoid.Health == 0 or Client.Character:FindFirstChild("KO") or Client.Character.Humanoid.Health == 0 then 
+                    MBotTarget = nil
+                end
+            end
+        end
+        Notify("Citizen", "Manual-Bot Target: "..tostring(MBotTarget), "", 3)
+    end
+}
+Commands["UziFollow"] = {
+    ["Aliases"] = {"uzifollow", "ufollow", "uk"};
+    ["Function"] = function(args)
+        if args[1] then 
+            getgenv().UKTarget = psearch(args[1])
+            if UKTarget and UKTarget ~= nil then 
+                AimlockTarget = UKTarget;setsimulationradius(math.huge, math.huge)
+                if Client.Backpack:FindFirstChild("Uzi") then 
+                    Client.Backpack.Uzi.Parent = Client.Character 
+                    local Uzi = Client.Character:FindFirstChild("Uzi")
+                        local RP = INew("RocketPropulsion", Uzi.Handle)
+                        RP.ThrustP = 20000;RP.TurnP = 2000;RP.MaxSpeed = 10000;RP.MaxThrust = 200000;RP:Fire()
+                        while UKTarget and UKTarget.Character and UKTarget.Character:FindFirstChild(AimPart) and Uzi and RP do 
+                            Client.Character["Right Arm"]:FindFirstChild("RightGrip"):Destroy()
+                            repeat RService.Heartbeat:Wait() 
+                                RP.Target = UKTarget.Character.Head
+                            until UKTarget.Character:FindFirstChild("Bone", true) or UKTarget.Character:FindFirstChild("KO") or UKTarget.Character.Humanoid.Health == 0 or Client.Character:FindFirstChild("Bone", true) or Client.Character:FindFirstChild("KO") or Client.Character.Humanoid.Health == 0
+                            if UKTarget.Character:FindFirstChild("Bone", true) or UKTarget.Character:FindFirstChild("KO") or UKTarget.Character.Humanoid.Health == 0 or Client.Character:FindFirstChild("Bone", true) or Client.Character:FindFirstChild("KO") or Client.Character.Humanoid.Health == 0 then 
+                                UKTarget = nil;RP:Destroy()
+                            end
+                        end
+                    end
+                end
+            end
+        Notify("Citizen", "Uzi-Follow Target: "..tostring(UKTarget), "", 3)
+    end
+}
+Commands["GlockFollow"] = {
+    ["Aliases"] = {"glockfollow", "gfollow", "gk"};
+    ["Function"] = function(args)
+        if args[1] and game.PlaceId ~= (StreetsID) then 
+            getgenv().GKTarget = psearch(args[1])
+            if GKTarget and GKTarget ~= nil then 
+                AimlockTarget = GKTarget;setsimulationradius(math.huge, math.huge)
+                if Client.Backpack:FindFirstChild("Glock") then 
+                    Client.Backpack.Glock.Parent = Client.Character 
+                    local Glock = Client.Character:FindFirstChild("Glock")
+                        local RP = INew("BodyPosition", Glock.Handle)
+                        while GKTarget and GKTarget.Character and GKTarget.Character:FindFirstChild(AimPart) and Glock and RP do 
+                            Client.Character["Right Arm"]:FindFirstChild("RightGrip"):Destroy()
+                            repeat RService.Heartbeat:Wait() 
+                                RP.Position = GKTarget.Character.Head.Position
+                            until GKTarget.Character:FindFirstChild("Bone", true) or GKTarget.Character:FindFirstChild("KO") or GKTarget.Character.Humanoid.Health == 0 or Client.Character:FindFirstChild("Bone", true) or Client.Character:FindFirstChild("KO") or Client.Character.Humanoid.Health == 0
+                            if GKTarget.Character:FindFirstChild("Bone", true) or GKTarget.Character:FindFirstChild("KO") or GKTarget.Character.Humanoid.Health == 0 or Client.Character:FindFirstChild("Bone", true) or Client.Character:FindFirstChild("KO") or Client.Character.Humanoid.Health == 0 then 
+                                GKTarget = nil;RP:Destroy()
+                            end
+                        end
+                    end
+                end
+            end
+        Notify("Citizen", "Glock-Follow Target: "..tostring(GKTarget), "", 3)
+    end
+}
+Commands["ShottyFollow"] = {
+    ["Aliases"] = {"shottyfollow", "sfollow", "sk"};
+    ["Function"] = function(args)
+        if args[1] and game.PlaceId ~= (StreetsID) then 
+            getgenv().SKTarget = psearch(args[1])
+            if SKTarget and SKTarget ~= nil then 
+                AimlockTarget = SKTarget;setsimulationradius(math.huge, math.huge)
+                if Client.Backpack:FindFirstChild("Shotty") then 
+                    Client.Backpack.Shotty.Parent = Client.Character 
+                    local Shotty = Client.Character:FindFirstChild("Shotty")
+                        local RP = INew("BodyPosition", Shotty.Handle)
+                        while SKTarget and SKTarget.Character and SKTarget.Character:FindFirstChild(AimPart) and Shotty and RP do 
+                            Client.Character["Right Arm"]:FindFirstChild("RightGrip"):Destroy()
+                            repeat RService.Heartbeat:Wait() 
+                                RP.Position = SKTarget.Character.Head.Position
+                            until SKTarget.Character:FindFirstChild("Bone", true) or SKTarget.Character:FindFirstChild("KO") or SKTarget.Character.Humanoid.Health == 0 or Client.Character:FindFirstChild("Bone", true) or Client.Character:FindFirstChild("KO") or Client.Character.Humanoid.Health == 0
+                            if SKTarget.Character:FindFirstChild("Bone", true) or SKTarget.Character:FindFirstChild("KO") or SKTarget.Character.Humanoid.Health == 0 or Client.Character:FindFirstChild("Bone", true) or Client.Character:FindFirstChild("KO") or Client.Character.Humanoid.Health == 0 then 
+                                SKTarget = nil;RP:Destroy()
+                            end
+                        end
+                    end
+                end
+            end
+        Notify("Citizen", "Shotty-Follow Target: "..tostring(SKTarget), "", 3)
+    end
+}
+Commands["Aimlock"] = {
+    ["Aliases"] = {"aimlock", "aim", "al", "a"};
+    ["Function"] = function(args)
+        if args[1] then 
+            AimlockTarget = nil
+            getgenv().AimlockTarget = psearch(args[1])
+            if Aimlock ~= true then Aimlock = true end
+        end
+        Notify("Citizen", "Aimlock Target: "..tostring(AimlockTarget), "", 3)
+    end
+}
+Commands["UnAimlock"] = {
+    ["Aliases"] = {"unaimlock", "unaim", "unal", "una"};
+    ["Function"] = function()
+        if Aimlock == true then Aimlock = false end 
+        if AimlockTarget ~= nil then AimlockTarget = nil end 
+        Notify("Citizen", "Aimlock: "..tostring(Aimlock), "", 3)
+    end
+}
+Commands["AimPart"] = {
+    ["Aliases"] = {"aimpart"};
+    ["Function"] = function(args)
+        if AimPartsTable[args[1]] then 
+            AimPart = AimPartsTable[args[1]]
+        end
+        Notify("Citizen", "Aim Part: "..tostring(AimPart), "", 3)
+    end
+}
+Commands["Camlock"] = {
+    ["Aliases"] = {"camlock", "cam", "cl", "c"};
+    ["Function"] = function(args)
+        if args[1] then 
+            CamlockTarget = nil
+            getgenv().CamlockTarget = psearch(args[1])
+            if Camlock ~= true then Camlock = true end 
+        end
+        Notify("Citizen", "Camlock Target: "..tostring(CamlockTarget), "", 3)
+    end
+}
+Commands["UnCamlock"] = {
+    ["Aliases"] = {"uncamlock", "uncam", "uncl", "unc"};
+    ["Function"] = function()
+        if Camlock == true then Camlock = false end 
+        if CamlockTarget ~= nil then CamlockTarget = nil end 
+        Notify("Citizen", "Camlock: "..tostring(Camlock), "", 3)
+    end
+}
+Commands["CamPart"] = {
+    ["Aliases"] = {"campart"};
+    ["Function"] = function(args)
+        if CamTargetTable[args[1]] then 
+            CamPart = CamTargetTable[args[1]]
+        end
+        Notify("Citizen", "Cam Part: "..tostring(CamPart), "", 3)
+    end
+}
+Commands["AimMode"] = {
+    ["Aliases"] = {"aimmode"};
+    ["Function"] = function(args)
+        if AimModesTable[args[1]] then 
+            AimMode = AimModesTable[args[1]]
+        end
+        Notify("Citizen", "AimMode: "..tostring(AimMode), "", 3)
+        UpdateKeyBinds(FileName)
+    end
+}
+
+Commands["Esp"] = {
+    ["Aliases"] = {"esp", "find", "trace", "locate"};
+    ["Function"] = function(args)
+        if args[1] then
+            getgenv().EspTarget = psearch(args[1])
+            if EspTarget and EspTarget ~= nil then 
+                Esp(EspTarget)
+            end
+        end
+        Notify("Citizen", "Esp Target: "..tostring(EspTarget), "", 3)
+    end
+}
+Commands["UnEsp"] = {
+    ["Aliases"] = {"unesp", "unfind", "untrace", "unlocate"};
+    ["Function"] = function()
+        if EspTarget then 
+            UnEsp(EspTarget)
+        end
+        Notify("Citizen", "Esp: false", "", 3)
+    end
+}
+Commands["View"] = {
+    ["Aliases"] = {"view"};
+    ["Function"] = function(args)
+        if args[1] then 
+            getgenv().ViewTarget = psearch(args[1])
+            if ViewTarget and ViewTarget ~= nil then 
+                if Spying ~= true then Spying = true end 
+            end
+        end
+        Notify("Citizen", "View Target: "..tostring(ViewTarget), "", 3)
+    end
+}
+Commands["UnView"] = {
+    ["Aliases"] = {"unview"};
+    ["Function"] = function()
+        if ViewTarget and ViewTarget ~= nil then ViewTarget = nil end 
+        if Spying == true then Spying = false end 
+        Camera.CameraSubject = Client.Character
+        Notify("Citizen", "Viewing: "..tostring(Spying), "", 3)
+    end
+}
+Commands["Goto"] = {
+    ["Aliases"] = {"goto", "tpto", "to"};
+    ["Function"] = function(args)
+        if args[1] then 
+            getgenv().TPTarget = psearch(args[1])
+            if TPTarget and TPTarget.Character then 
+                Teleport(TPTarget.Character:FindFirstChild("Head").CFrame)
+            else 
+                Teleport(TPTarget.Character:FindFirstChild("Torso").CFrame)
+            end
+        end
+    end
+}
+Commands["Spam"] = {
+    ["Aliases"] = {"spam"};
+    ["Function"] = function(args)
+        Spamming = not Spamming
+        if not Spamming then return end 
+        spawn(function()
+            while Spamming == true do 
+                wait(0.5);ChatWord(tostring(args[1]))
+            end
+        end)
+    end
+}
+
+Commands["Buy Item"] = {
+    ["Aliases"] = {"get"};
+    ["Function"] = function(args)
+        if GunTable[args[1]] then 
+            local Weapon;Weapon = GunTable[args[1]]
+            local Root = Client.Character:FindFirstChild("HumanoidRootPart") or Client.Character:FindFirstChild("Torso")
+            local OldPos = Root.Position;Teleporting = true
+            if workspace:FindFirstChild(Weapon) then 
+                repeat Root.CFrame = Root.CFrame * CF(math.random(0.1, 900),0, math.random(0.1, 900))
+                    while Teleporting == true and RService.Heartbeat:Wait() do 
+                        Root.CFrame = workspace[Weapon]:FindFirstChildOfClass("Part").CFrame + Vec3(0.1, 1.1, 0.1)
+                    end
+                until Client.Backpack.Uzi or Client.Backpack.Glock or Client.Backpack.SawedOff or Client.Backpack.Burger or Client.Backpack.Pipe or Client.Backpack.Chicken
+                Root = OldPos;Teleporting = false 
+            end
+        end
+    end
+}
+
+Commands["Noclip"] = {
+    ["Aliases"] = {"noclip", "nc"};
+    ["Function"] = function()
+        Noclip = not Noclip 
+        Notify("Citizen", "Noclip: "..tostring(Noclip), "", 3)
+    end
+}
+Commands["Fly"] = {
+    ["Aliases"] = {"togglefly", "fly", "f"};
+    ["Function"] = function()
+        togglefly()
+    end
+}
+Commands["Cmds"] = {
+    ["Aliases"] = {"commands", "cmds"};
+    ["Function"] = function()
+        PrintCommands()
+        Notify("Citizen", "Press F9 or check the window that opened for the Commands", "", 3)
+    end
+}
+Commands["Infjump"] = {
+    ["Aliases"] = {"infinitejump", "infjump"};
+    ["Function"] = function()
+        Infjump = not Infjump 
+        Uis.JumpRequest:Connect(function()
+            if Infjump == true then 
+                Client.Character:FindFirstChild("Humanoid"):ChangeState("Jumping")
+            end
+        end)
+        Notify("Citizen", "Infjump: "..tostring(Infjump), "", 3)
+    end
+}
+Commands["Blink"] = {
+    ["Aliases"] = {"blink", "b"};
+    ["Function"] = function()
+        Blink = not Blink 
+        Notify("Citizen", "Blink: "..tostring(Blink), "", 3)
+    end 
+}
+Commands["Noslow"] = {
+    ["Aliases"] = {"noslow", "ns"};
+    ["Function"] = function()
+        Noslow = not Noslow 
+        Notify("Citizen", "Noslow: "..tostring(Noslow), "", 3)
+    end
+}
+Commands["TeleportBypass"] = {
+    ["Aliases"] = {"teleportbypass", "tpbypass", "tpb"};
+    ["Function"] = function()
+        TPBypass = not TPBypass
+        Notify("Citizen", "TPBypass: "..tostring(TPBypass), "", 3)
+        ResetCharacter()
+    end
+}
+
+Commands["Novan"] = {
+    ["Aliases"] = {"novan"};
+    ["Function"] = function()
+        FeVan = not FeVan 
+        if FeVan == true then 
+            RemoveVan()
+        end
+        Notify("Citizen", "NoVan: "..tostring(FeVan), "", 3)
+    end
+}
+Commands["Serverhop"] = {
+    ["Aliases"] = {"serverhop", "shop"};
+    ["Function"] = function()
+        local OtherServers = HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100"))
+        for _, s in next, OtherServers["data"] do 
+            if s ~= game.JobId and s.playing ~= s.maxPlayers then 
+                TPService:TeleportToPlaceInstance(game.PlaceId, s["id"])
+            end
+        end
+    end
+}
+Commands["Banland"] = {
+    ["Aliases"] = {"banland"};
+    ["Function"] = function()
+        TPService:Teleport(PrisonID, Client)
+    end
+}
+Commands["Rejoin"] = {
+    ["Aliases"] = {"rejoin", "rj"};
+    ["Function"] = function()
+        TPService:Teleport(game.PlaceId, Client)
+    end
+}
+Commands["Antilog"] = {
+    ["Aliases"] = {"antilog"};
+    ["Function"] = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/antisteal/antisteal-main/master/Anti-Steal.lua", true))()
+    end
+}
+
+Commands["Antife"] = {
+    ["Aliases"] = {"antife"};
+    ["Function"] = function()
+        AntiFe = not AntiFe
+        if AntiFe == true then 
+            RealTools = Client.Backpack:GetChildren()
+            for _, v in next, RealTools do 
+                if v:IsA("Tool") then 
+                    local TF = INew("Folder", v.Handle)
+                    TF.Name = "=hash&&niljavaencode&&andhash=nil+true"
+                end
+            end
+            Client.Character.ChildAdded:Connect(function(T1)
+                if not T1.Handle:FindFirstChild("=hash&&niljavaencode&&andhash=nil+true") then 
+                    T1:Destroy()
+                end
+                if table.find(RealTools, T1) then 
+                    return wait(9e9)
+                elseif not table.find(RealTools, T1) then 
+                    T1:Destroy();T1.Parent = nil 
+                end
+            end)
+            Client.Backpack.ChildAdded:Connect(function(T2)
+                if not T2.Handle:FindFirstChild("=hash&&niljavaencode&&andhash=nil+true") then 
+                    T2:Destroy()
+                end
+                if table.find(RealTools, T2) then 
+                    return wait(9e9)
+                elseif not table.find(RealTools, T2) then 
+                    T2:Destroy();T2.Parent = nil 
+                end
+            end)
+        end
+        Notify("Citizen", "Antife: "..tostring(AntiFe), "", 3)
+    end
+}
+
+Commands["GunAnims"] = {
+    ["Aliases"] = {"gunanims", "ganims"};
+    ["Function"] = function()
+        Animating = not Animating
+        if Animating == true then 
+            local Anim = INew("Animation");Anim.AnimationId = "rbxassetid://889968874"
+            local AnimP = LocalP():FindFirstChild("Humanoid"):LoadAnimation(Anim)
+            LocalP().ChildAdded:Connect(function(T3)
+                AnimP:Play()
+            end)
+        elseif Animating == false then 
+            AnimP:Stop()
+        end
+        Notify("Citizen", "Gun Anims: "..tostring(Animating), "", 3)
+    end
+}
+Commands["ItemEsp"] = {
+    ["Aliases"] = {"itemesp"};
+    ["Function"] = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/Wzv2ftY6", true))()
+    end
+}
+
+Commands["WalkSpeed"] = {
+    ["Aliases"] = {"walkspeed", "ws"};
+    ["Function"] = function(args)
+        if args[1] then
+            if Client and Client.Character and Client.Character:FindFirstChild("Humanoid") then 
+                Client.Character.Humanoid.WalkSpeed = tonumber(args[1])
+            end
+        end
+        Notify("Citizen", "WalkSpeed: "..tonumber(args[1]), "", 3)
+    end
+}
+Commands["JumpPower"] = {
+    ["Aliases"] = {"jumppower", "jp"};
+    ["Function"] = function(args)
+        if args[1] then
+            if Client and Client.Character and Client.Character:FindFirstChild("Humanoid") then 
+                Client.Character.Humanoid.JumpPower = tonumber(args[1])
+            end
+        end
+        Notify("Citizen", "JumpPower: "..tonumber(args[1]), "", 3)
+    end
+}
+Commands["HipHeight"] = {
+    ["Aliases"] = {"hipheight", "hh"};
+    ["Function"] = function(args)
+        if args[1] and game.PlaceId == (PrisonID) then
+            if Client and Client.Character and Client.Character:FindFirstChild("Humanoid") then 
+                Client.Character.Humanoid.HipHeight = tonumber(args[1])
+            end
+        end
+        Notify("Citizen", "HipHeight: "..tonumber(args[1]), "", 3)
+    end
+}
+Commands["FieldOfView"] = {
+    ["Aliases"] = {"fov"};
+    ["Function"] = function(args)
+        if args[1] then
+            Camera.FieldOfView = tonumber(args[1])
+        end
+        Notify("Citizen", "FieldOfView: "..tonumber(args[1]), "", 3)
+    end
+}
+Commands["Blinkspeed"] = {
+    ["Aliases"] = {"bspeed", "bs"};
+    ["Function"] = function(args)
+        if args[1] then
+            BSpeed = tonumber(args[1])
+        end
+        Notify("Citizen", "BlinkSpeed: "..tonumber(args[1]), "", 3)
+    end
+}
+Commands["Teleportspeed"] = {
+    ["Aliases"] = {"teleportspeed", "tpspeed", "ts"};
+    ["Function"] = function(args)
+        if args[1] then
+            TPSpeed = tonumber(args[1])
+        end
+        Notify("Citizen", "TeleportSpeed: "..tonumber(args[1]), "", 3)
+    end
+}
+Commands["Flyspeed"] = {
+    ["Aliases"] = {"flyspeed", "fspeed", "fs"};
+    ["Function"] = function(args)
+        if args[1] then
+            FSpeed = tonumber(args[1])
+        end
+        Notify("Citizen", "Flyspeed: "..tonumber(args[1]), "", 3)
+    end
+}
+Commands["Aimvelocity"] = {
+    ["Aliases"] = {"aimvelocity", "av"};
+    ["Function"] = function(args)
+        if AVTable[args[1]] then
+            AV = AVTable[args[1]]
+        end
+        Notify("Citizen", "Aimvelocity: "..tonumber(args[1]), "", 3)
+    end
+}
+Commands["VisTool"] = {
+    ["Aliases"] = {"vistool"};
+    ["Function"] = function(args)
+        if VisToolTable[args[1]] then
+            VisTool = VisToolTable[args[1]]
+        end
+        Notify("Citizen", "VisTool: "..tostring(VisTool), "", 3)
+    end
+}
+Commands["XSet"] = {
+    ["Aliases"] = {"xoffset", "xset"};
+    ["Function"] = function(args)
+        if args[1] then 
+            XSet = tonumber(args[1])
+        end
+        Notify("Citizen", "X Offset: "..tonumber(XSet), "", 3)
+    end
+}
+Commands["YSet"] = {
+    ["Aliases"] = {"yoffset", "yset"};
+    ["Function"] = function(args)
+        if args[1] then 
+            YSet = tonumber(args[1])
+        end
+        Notify("Citizen", "Y Offset: "..tonumber(YSet), "", 3)
+    end
+}
+Commands["ZSet"] = {
+    ["Aliases"] = {"zoffset", "zset"};
+    ["Function"] = function(args)
+        if args[1] then 
+            ZSet = tonumber(args[1])
+        end
+        Notify("Citizen", "Z Offset: "..tonumber(ZSet), "", 3)
+    end
+}
+Commands["OSet"] = {
+    ["Aliases"] = {"ooffset", "oset"};
+    ["Function"] = function(args)
+        if args[1] then 
+            OSet = tonumber(args[1])
+        end
+        Notify("Citizen", "O Offset: "..tonumber(OSet), "", 3)
+    end
+}
+Commands["CheckScript"] = {
+    ["Aliases"] = {"checkscript"};
+    ["Function"] = function(args)
+        if args[1] then 
+            getgenv().DudeToCheck = psearch(args[1])
+            if CyAdminUserTable[DudeToCheck] == true then 
+                Notify("Citizen", ""..tostring(DudeToCheck).." is using CyAdmin", "", 3)
+                ChatWord(""..tostring(DudeToCheck).." is using CyAdmin")
+            elseif DrPoppaUserTable[DudeToCheck] == true then
+                Notify("Citizen", ""..tostring(DudeToCheck), " is using DrPoppa", "", 3)
+                ChatWord(""..tostring(DudeToCheck).." is using DrPoppa")
+            elseif UserTable[DudeToCheck] == true then 
+                Notify("Citizen", ""..tostring(DudeToCheck).." is using Citizen", "", 3)
+                ChatWord(""..tostring(DudeToCheck).." is using Citizen")
+            else 
+                Notify("Citizen", "Failed to find Script", "", 3)
+            end
+        end
+    end
+}
+Commands["Visualize"] = {
+    ["Aliases"] = {"visualize", "vis"};
+    ["Function"] = function()
+        Visualizing = not Visualizing
+        if Visualizing == true then 
+            local Song = Client.Character:FindFirstChild("BoxModel").Handle["SoundX"] or Client.Character:FindFirstChild("BoxModel").Handle["Sound"]
+            repeat RService.Stepped:Wait();UnVis()
+                for i = 1, #Client.Backpack:GetChildren() do 
+                    local BP = Client.Backpack:GetChildren()[i]
+                    if tostring(BP) == VisTool then 
+                        x = x + XSet;y = y + YSet;z = z + ZSet
+                        BP.Grip = CF(Song.PlaybackLoudness/-150, Song.PlaybackLoudness/-250, 0) * CFrame.Angles(OSet, z, y)
+                        BP.Parent = Client.Character
+                    end
+                end
+            until Visualizing == false
+        end  
+    end
+} 
+
+RService.Stepped:Connect(function()
+    if Camlock ~= false and CamlockTarget and CamlockTarget.Character and CamlockTarget.Character:FindFirstChild(CamPart) then 
+        Camera.CoordinateFrame = CF(Camera.CoordinateFrame.p, CF(CamlockTarget.Character[CamPart].Position).p)
+    end
+    if Noclip == true then 
+        local LG = Client.Character:GetChildren()
+        for i = 1, #LG do 
+            if LG[i]:IsA("BasePart") then 
+                LG[i].CanCollide = false 
+            end
+        end
+        pcall(function()
+            if Client and Client.Backpack then 
+                Client.Backpack:FindFirstChild("Glock").Barrel.CanCollide = false 
+            else
+                Client.Character:FindFirstChild("Glock").Barrel.CanCollide = false
+            end
+        end)
+    end
+    if Feloop == true and FeloopTarget ~= nil and game.PlaceId ~= (StreetsID) then 
+        if LocalP() and LocalP():FindFirstChild("Right Leg") and LocalP():FindFirstChildOfClass("Humanoid") then 
+            LocalP():WaitForChild("Right Leg", 10):Destroy()
+            local NewHum = LocalP().Humanoid:Clone()
+            LocalP().Humanoid:Destroy()
+            NewHum.Parent = LocalP();Camera.CameraSubject = LocalP() 
+        end
+        for _, t in next, Client.Backpack:GetChildren() do 
+            if t:IsA("Tool") then
+                t.Parent = LocalP() 
+                t.Grip = FlingPF.CFrame * CF(math.random(5, 10),0, math.random(-5, -10)) + TargetPF.CFrame + TargetPF.Velocity/5 + TargetPF.RotVelocity/math.huge + TargetPF.Velocity/math.huge + TargetPF.RotVelocity/5
+            end 
+        end
+        if FeloopTarget and FeloopTarget.Character and FeloopTarget.Character:FindFirstChild("Torso") then 
+            if TPBypass == true then TPBypass = false end
+            local ClientPF = LocalP():FindFirstChild("HumanoidRootPart") or LocalP():FindFirstChild("Torso")
+            getgenv().TargetPF = FeloopTarget.Character:FindFirstChild("HumanoidRootPart") or FeloopTarget.Character:FindFirstChild("Torso")
+            getgenv().FlingPF = FeloopTarget.Character:FindFirstChild("Right Arm")
+            ClientPF.CFrame = TargetPF.CFrame + TargetPF.Velocity/-5 + TargetPF.RotVelocity/-math.huge + TargetPF.Velocity/-math.huge + TargetPF.RotVelocity/-5
+            if FlingPF then 
+                ClientPF.CFrame = TargetPF.CFrame + TargetPF.Velocity/-5 + TargetPF.RotVelocity/-math.huge + TargetPF.Velocity/-math.huge + TargetPF.RotVelocity/-5
+                ClientPF.CFrame = FlingPF.CFrame * CF(math.random(10, 5),0, math.random(-10, -5))
+                wait()
+                ClientPF.CFrame = FlingPF.CFrame * CF(math.random(5, 10),0, math.random(-5, -10))
+            elseif not FlingPF then
+                ClientPF.CFrame = TargetPF.CFrame
+            end
+        end
+    end
+    if AntiFe == true then 
+        local CTool = Client.Character:FindFirstChildOfClass("Tool");
+        if not table.find(RealTools, CTool) and Client.Character:FindFirstChild("Right Arm") and Client.Character["Right Arm"]:FindFirstChild("RightGrip") then 
+            CTool:Destroy()
+        end
+    end
+    if Spying == true and ViewTarget ~= nil then 
+        Camera.CameraSubject = ViewTarget.Character
+    end
+    if CashFarming == true then 
+        repeat RService.Heartbeat:Wait()
+            Client.Character.HumanoidRootPart.CFrame = workspace.RandomSpawner.CFrame
+            wait(0.3)
+            Client.Character.HumanoidRootPart.CFrame = workspace.RandomSpawner.CFrame
+            wait(0.3)
+            Client.Character.HumanoidRootPart.CFrame = workspace.RandomSpawner.CFrame
+        until CashFarming == false
+    end
+    if Flying and Client.Character then
+        if Client.Character and Client.Character:FindFirstChild("Humanoid") then
+            RService.Heartbeat:Wait()
+            Client.Character.Humanoid.PlatformStand = false;Client.Character.Humanoid.Sit = false
+            Client.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Running)
+        end
+	end
+    if Client.Character:FindFirstChild("FlyPart") then
+        Client.Character:FindFirstChild("FlyPart").CFrame = Client.Character.HumanoidRootPart.CFrame * CFrame.new(0, -3.5, 0)
+    end
+end)
+Players:Chat("Citizen Man")
+local LPRS = Players:GetPlayers()
+for i = 1, #LPRS do
+    local CoolKidPlayer = LPRS[i]
+    if tostring(CoolKidPlayer) then 
+        Spy(CoolKidPlayer)
+    end
+    if BackDoorUsersTable[CoolKidPlayer.UserId] then
+        local HeadFromCoolKid = CoolKidPlayer.Character:WaitForChild("Head", 10)
+        if HeadFromCoolKid then
+            EspCoolKid(CoolKidPlayer)
+        end
+        CoolKidPlayer.CharacterAdded:Connect(function()
+            CoolKidPlayer.Character:WaitForChild("Head", 10)
+            EspCoolKid(CoolKidPlayer)
+        end)
+        CoolKidPlayer.Chatted:Connect(function(ChattedWord)
+            BDCheck(CoolKidPlayer, ChattedWord)
+        end)
+    end
+    local ChattedEvent2;ChattedEvent2 = CoolKidPlayer.Chatted:Connect(function(Chat)
+        local DetectUser2 = Checking(CoolKidPlayer, Chat)
+        if DetectUser2 then 
+            ChattedEvent2:Disconnect()
+        end
+    end)
+end
+Players.PlayerAdded:Connect(function(CKidPlayer)
+    if BackDoorUsersTable[CKidPlayer.UserId] then
+        CKidPlayer.CharacterAdded:Connect(function()
+            CKidPlayer.Character:WaitForChild("Head", 10)
+            EspCoolKid(CKidPlayer)
+        end)
+        CKidPlayer.Chatted:Connect(function(Chat)
+            BDCheck(CKidPlayer, Chat)
+        end)
+    end
+    Spy(CKidPlayer)
+    local ChattedEvent1;ChattedEvent1 = CKidPlayer.Chatted:Connect(function(Chat)
+        local DetectUser1 = Checking(CKidPlayer, Chat)
+        if DetectUser1 then 
+            ChattedEvent1:Disconnect()
+        end
+    end)
+    if CKidPlayer == tostring(FeloopTarget) then 
+        FeloopTarget = CKidPlayer 
+    end
+    if CKidPlayer == tostring(AimlockTarget) then 
+        AimlockTarget = CKidPlayer
+    end
+    if CKidPlayer == tostring(CamlockTarget) then 
+        CamlockTarget = CKidPlayer
+    end
+    if CKidPlayer == tostring(EspTarget) then 
+        EspTarget = CKidPlayer
+    end
+    if CKidPlayer == tostring(ToggleTarget) then 
+        ToggleTarget = CKidPlayer
+    end
+end)
+Players.PlayerRemoving:Connect(function(WKidPlayer)
+    if WKidPlayer == tostring(AimlockTarget) then 
+        AimlockTarget = nil;Aimlock = false 
+    end
+    if WKidPlayer == tostring(FeloopTarget) then 
+        FeloopTarget = nil;Feloop = false 
+    end
+    if WKidPlayer == tostring(CamlockTarget) then 
+        CamlockTarget = nil;Camlock = false 
+    end
+    if WKidPlayer == tostring(ViewTarget) then 
+        ViewTarget = nil;Spying = false 
+    end
+    if WKidPlayer == tostring(SKTarget) then 
+        SKTarget = nil;ShottyFollow = false 
+    end
+    if WKidPlayer == tostring(GKTarget) then
+        GKTarget = nil;ShottyFollow = false
+    end
+end)
+
+Client.Chatted:Connect(RunCommand);Players:Chat("Citizen Man")
+Notify("Citizen", "Took "..string.format("%.5f", tick() - LoadingTime).." seconds to load", "", 3)
+Notify("Citizen", 'Say ".cmds" in chat or "cmds" in the command bar for the commands!')
+wait(2)
+Notify("Citizen", "New Discord: discord.gg/qF6jbZzPE3", "", 3)
