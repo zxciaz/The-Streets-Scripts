@@ -1,0 +1,39 @@
+-- by fiviefourteen/zxciaz/xaxa
+local Players, RService, Uis = game:GetService("Players"), game:GetService("RunService"), game:GetService("UserInputService")
+local Client, Mouse, CF, Vec3 = Players.LocalPlayer, Players.LocalPlayer:GetMouse(), CFrame.new, Vector3.new;
+local AV, AimPart, Val, Target, Shooting = 10, "Torso", nil, nil, false
+
+getgenv().UnEquipTool = function(T)
+    if Client and Client.Character and Client.Character:FindFirstChild("Humanoid") then 
+        Client.Character.Humanoid:UnequipTools(T)
+    end
+end
+getgenv().ShootPlayer = function(Plr)
+    Shooting = true
+    local Tool = Client.Character:FindFirstChildWhichIsA("Tool")
+    if Plr and Plr.Character and Plr.Character:FindFirstChild(AimPart) and not Plr.Character:FindFirstChild("ForceField") and Shooting == true then 
+        Tool.Fire:FireServer(CF(Plr.Character[AimPart].Position) + Plr.Character[AimPart].Velocity/AV + Plr.Character[AimPart].RotVelocity/AV)
+    end
+end
+
+Uis.InputBegan:Connect(function(Key)
+    if not (Uis:GetFocusedTextBox()) then
+        if Key.KeyCode == Enum.KeyCode.E and Mouse.Target.Parent:FindFirstChild("Humanoid") and Client.Character["Right Arm"]:FindFirstChild("RightGrip") then 
+            Target = Players:GetPlayerFromCharacter(Mouse.Target.Parent)
+            Client.Character["Right Arm"]["RightGrip"]:Destroy()
+            getgenv().Tool = Client.Character:FindFirstChildOfClass("Tool");Shooting = true
+            while Shooting == true and Target and Target.Character and Target.Character:FindFirstChild(AimPart) do 
+                repeat RService.Heartbeat:Wait()
+                    ShootPlayer(Target);Tool.Handle.CFrame = CF(Target.Character[AimPart].Position)
+                until Target.Character:FindFirstChild("KO") or Target.Character.Humanoid.Health == 0 or Client.Character:FindFirstChild("KO") or Client.Character.Humanoid.Health == 0 or not Tool or Shooting == false
+            end 
+            if Target.Character:FindFirstChild("KO") or Target.Character.Humanoid.Health == 0 or Client.Character:FindFirstChild("KO") or Client.Character.Humanoid.Health == 0 or not Tool then 
+                Target = nil;Shooting = false;UnEquipTool(Tool)
+            end 
+        end
+    end
+end)
+
+
+setsimulationradius(math.huge, math.huge)
+settings()["Physics"].AllowSleep = false
