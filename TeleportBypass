@@ -1,0 +1,90 @@
+    local bypass = false
+    local fakemodel = Instance.new("Model")
+    fakemodel.Parent = game.Workspace
+    local meta = getrawmetatable(game) 
+    setreadonly(meta,false)
+    local namecall = meta.__namecall
+    local newindex = meta.__newindex
+    local index = meta.__index
+ 
+    meta.__namecall=function(self,...)
+        if not checkcaller() then
+            local Args={...}
+            local method = getnamecallmethod()
+            if method == "BreakJoints" and tostring(self) == game.Players.LocalPlayer.Character.Name then
+                return namecall(fakemodel,...)
+            end
+            if method == "FireServer" then 
+                if self.Name == "lIII" or tostring(self.Parent) == "ReplicatedStorage" then 
+                    return wait(9e9)
+                end
+                if Args[1] == "hey" then 
+                    return wait(9e9)
+                end
+            end
+            if method == "ClearAllChildren" or method == "Destroy" then 
+                return 
+            end 
+            if string.lower(method) == "waitforchild" then
+                if Args[1] == "HumanoidRootPart" then
+                    if bypass then
+                        Args[1] = "Torso"
+                        return namecall(self,unpack(Args))
+                    end
+                end
+            end
+            if string.lower(method) == "findfirstchild" then
+                if Args[1] == "HumanoidRootPart" then
+                    if bypass then
+                        Args[1] = "Torso"
+                    end
+                end
+            end
+        end
+        if checkcaller() then
+            local Args={...}
+            local method = getnamecallmethod()
+            if string.lower(method) == "findfirstchild" then
+                if Args[1] ~= nil then
+                    if Args[1] == "HumanoidRootPartP" then
+                        Args[1] = "HumanoidRootPart"
+                        return namecall(self,unpack(Args))
+                    end
+                end
+            end
+        end
+        return namecall(self,...)
+    end
+    meta.__index=function(self,k)
+        local Script=getfenv(2).script
+        if checkcaller() then
+            if k == "HumanoidRootPart" and tostring(t)==tostring(player) then
+                if bypass then
+                    if getcallingscript then
+                        if getcallingscript() ~= script then
+                            return index(self,"Torso")
+                        end
+                    else
+                        if get_calling_script(2) ~= script then
+                            return index(self,"Torso")
+                        end
+                    end
+                end
+            end
+        end
+        return index(self,k)
+    end
+ 
+ 
+game.Players.LocalPlayer.Character.Humanoid:ChangeState(15) 
+bypass = true
+ 
+  game:GetService('RunService').Stepped:connect(function()
+    if bypass then
+        local Root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPartP")
+            if Root then
+                game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPartP").Parent = nil
+            end
+        end
+    end)
+    end
