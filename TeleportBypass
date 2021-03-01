@@ -1,4 +1,4 @@
-    local bypass = false
+    getgenv().TSbypass = false
     local fakemodel = Instance.new("Model")
     fakemodel.Parent = game.Workspace
     local meta = getrawmetatable(game) 
@@ -27,7 +27,7 @@
             end 
             if string.lower(method) == "waitforchild" then
                 if Args[1] == "HumanoidRootPart" then
-                    if bypass then
+                    if TSbypass then
                         Args[1] = "Torso"
                         return namecall(self,unpack(Args))
                     end
@@ -35,7 +35,7 @@
             end
             if string.lower(method) == "findfirstchild" then
                 if Args[1] == "HumanoidRootPart" then
-                    if bypass then
+                    if TSbypass then
                         Args[1] = "Torso"
                     end
                 end
@@ -59,7 +59,7 @@
         local Script=getfenv(2).script
         if checkcaller() then
             if k == "HumanoidRootPart" and tostring(t)==tostring(player) then
-                if bypass then
+                if TSbypass then
                     if getcallingscript then
                         if getcallingscript() ~= script then
                             return index(self,"Torso")
@@ -77,10 +77,10 @@
  
  
 game.Players.LocalPlayer.Character.Humanoid:ChangeState(15) 
-bypass = true
+TSbypass = true
  
   game:GetService('RunService').Stepped:connect(function()
-    if bypass then
+    if TSbypass then
         local Root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPartP")
             if Root then
                 game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPartP").Parent = nil
